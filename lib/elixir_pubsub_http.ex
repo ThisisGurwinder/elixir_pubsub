@@ -13,7 +13,8 @@ defmodule ElixirPubsubHttp do
         :cowboy_router.compile([
             { :_,
                 [
-                    {"/", ElixirPubsubHttpDefault, []}
+                    {"/", ElixirPubsubHttpDefault, []},
+                    {"/ws", ElixirPubsubSocketHandler, []}
                 ]}
         ])
     end
