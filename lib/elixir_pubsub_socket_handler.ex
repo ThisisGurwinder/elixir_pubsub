@@ -10,11 +10,9 @@ defmodule ElixirPubsubSocketHandler do
         :ok
     end
 
-    def websocket_handle({:text, content}, req, state) do
-        { :ok, %{ "message" => message }} = JSEX.decode(content)
-        IO.puts "Got message #{message}"
-        {:ok, reply} = JSEX.encode(%{ reply: "PONG" })
-        {:reply, {:text, reply}, req, state}
+    def websocket_handle({:text, _content}, req, state) do
+        {:ok, message} = JSEX.encode(%{ ping: "PONG" })
+        {:reply, {:text, message}, req, state}
     end
 
     def websocket_handle(_frame, _req, state) do
