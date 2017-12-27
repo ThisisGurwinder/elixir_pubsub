@@ -10,7 +10,6 @@ defmodule ElixirPubsubHttp do
     end
 
     def build_dispatch_config do
-    
         :cowboy_router.compile([
             { :_,
                 [

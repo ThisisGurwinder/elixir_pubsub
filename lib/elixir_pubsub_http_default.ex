@@ -11,6 +11,7 @@ defmodule RidhmPubsubHttpDefault do
             request
         )        
     {:ok, req, state}
+    end
 
     def terminate(_reason, _request, _state) do
         :ok
