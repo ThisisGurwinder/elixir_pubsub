@@ -1,4 +1,4 @@
-defmodule RidhmPubsubHttpDefault do
+defmodule ElixirPubsubHttpDefault do
     def init(req, state) do
         handle(req, state)
     end
