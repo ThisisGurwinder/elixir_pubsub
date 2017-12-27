@@ -1,0 +1,2 @@
+defmodule ElixirPubsub do
+end
