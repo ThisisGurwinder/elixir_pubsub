@@ -1,20 +1,21 @@
 defmodule ElixirPubsubHttp do
-    use Application
-
+    
     def start(_type, _args) do
-        import Supervisor.Spec, warn: false
+        dispatch_config = build_dispatch_config,
+        { :ok, _ } = :cowboy.start_http(:http,
+                        100,
+                        [{:port, 8080}],
+                        [{:env, [{:dispatch, dispatch_config}]}]
+                    )
+    end
 
-        web_config = [ip: {127, 0, 0, 1},
-                        port: 8080,
-                        dispatch: []]
-        
-        children = [
-            worker(:webmachine_mochiweb, [web_config],
-                    function: :start,
-                    modules: [:mochiweb_socket_server])
-        ]
-
-        opts = [strategy: :one_for_one, name: ElixirPubsubHttp.Supervisor]
-        Supervisor.start_link(children, opts)
+    def build_dispatch_config do
+    
+        :cowboy_router.compile([
+            { :_,
+                [
+                
+                ]}
+        ])
     end
 end
