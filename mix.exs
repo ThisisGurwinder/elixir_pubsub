@@ -27,6 +27,8 @@ defmodule ElixirPubsub.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [{:webmachine,
+      git: "https://github.com/webmachine/webmachine.git",
+      branch: "master"}]
   end
 end
