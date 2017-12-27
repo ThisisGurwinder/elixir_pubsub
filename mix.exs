@@ -32,6 +32,7 @@ defmodule ElixirPubsub.Mixfile do
   defp deps do
     [{:webmachine, git: "https://github.com/webmachine/webmachine.git", branch: "master"},
     { :cowboy, github: "ninenines/cowboy", tag: "2.0.0-pre.3" },
-    { :jsex, "~> 2.0.0" }}]
+    { :jsex, "~> 2.0.0" }
+    ]
   end
 end
