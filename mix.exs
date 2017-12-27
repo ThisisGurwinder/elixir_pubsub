@@ -16,7 +16,7 @@ defmodule ElixirPubsub.Mixfile do
   def application do
     [
       mod: { ElixirPubsubHttp, [] },
-      applications: [:logger]
+      applications: [:logger, :cowboy, :ranch]
     ]
   end
 
