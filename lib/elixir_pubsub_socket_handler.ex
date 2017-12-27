@@ -2,8 +2,8 @@ defmodule ElixirPubsubSocketHandler do
     @behaviour :cowboy_websocket
 
     def init(req, state) do
-        :erlang.start_timer(1000, self, [])
-        {:cowboy_websocket, req, state}
+        IO.puts "State :: #{state} \n"
+        {:cowboy_websocket, req, {}}
     end
 
     def terminate(_reason, _req, _state) do
@@ -11,28 +11,14 @@ defmodule ElixirPubsubSocketHandler do
     end
 
     def websocket_handle({:text, _content}, req, state) do
-        {:ok, message} = JSEX.encode(%{ ping: "PONG" })
-        {:reply, {:text, message}, req, state}
+        {:reply, {:text, "PONG"}, req, state}
     end
 
     def websocket_handle(_frame, _req, state) do
         {:ok, state}
     end
 
-    def websocket_info({_timeout, _ref, _msg}, req, state) do
-        time = time_as_string()
-        {:ok, message} = JSEX.encode(%{ time: time })
-        :erlang.start_timer(1000, self, [])
-        {:reply, {:text, message}, req, state}
-    end
-
     def websocket_info(_info, _req, state) do
         {:ok, state}
-    end
-
-    def time_as_string do
-        {hh, mm, ss} = :erlang.time()
-        :io_lib.format("~2.10.0B:~2.10.0B:~2.10.0B", [hh, mm, ss])
-        |> :erlang.list_to_binary()
     end
 end
