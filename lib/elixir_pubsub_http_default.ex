@@ -7,7 +7,7 @@ defmodule ElixirPubsubHttpDefault do
         req = :cowboy_req.reply(
             200,
             [{"content-type", "application/text"}],
-            "Default Response ...",
+            "Default Response ...\n",
             request
         )        
     {:ok, req, state}
