@@ -1,0 +1,2 @@
+%{"mochiweb": {:hex, :mochiweb, "2.12.2", "80804ad342afa3d7f3524040d4eed66ce74b17a555de454ac85b07c479928e46", [], [], "hexpm"},
+  "webmachine": {:git, "https://github.com/webmachine/webmachine.git", "9c9bd3a1c7b1dbb04e356314fa5cd9a49e1910c5", [branch: "master"]}}
