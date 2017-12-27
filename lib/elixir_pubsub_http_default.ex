@@ -4,7 +4,7 @@ defmodule RidhmPubsubHttpDefault do
     end
 
     def handle(request, state) do
-        req = :cowboy_req:reply(
+        req = :cowboy_req.reply(
             200,
             [{"content-type", "application/text"}],
             "Default Response ...",
