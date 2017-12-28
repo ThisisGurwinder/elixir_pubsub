@@ -28,7 +28,7 @@ defmodule ElixirPubsubSocketHandler do
     end
 
     def create_connection(:permanent) do
-        {ok, CPid} = ElixirPubsubConnection.Supervisor.start_connection(self(), :permanent, nil)
+        ElixirPubsubConnection.Supervisor.start_connection(self(), :permanent, nil)
     end
 
     def init_long_lived do
