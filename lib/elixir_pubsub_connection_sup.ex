@@ -21,14 +21,14 @@ defmodule ElixirPubsubConnection.Supervisor do
             {__MODULE__, start_connection, From, Type, Token} ->
                 case ElixirPubsubConnection.start_link(From, Type) of
                     {:ok, pid} ->
-                        send From, {:ok, pid}
+                        # send From, {:ok, pid}
                         IO.puts "Started Elixir Pubsub Connection Supervisor"
                         loop(State, CurConns+1)
                     _ ->
                         loop(State, CurConns)
                 end;
             Msg ->
-                send From, self()
+                # send From, self()
                 IO.puts "Unknown Message Recieved #{Msg}"
         end
     end
