@@ -1,7 +1,7 @@
 defmodule ElixirPubsubSocketHandler do
     @behaviour :cowboy_websocket
 
-    def init(req, state) do
+    def init(req, _state) do
         init_long_lived()
         {:cowboy_websocket, req, %{:connection => nil}}
     end
@@ -10,7 +10,7 @@ defmodule ElixirPubsubSocketHandler do
         :ok
     end
 
-    def websocket_handle({:text, _content}, req, state = %{:connection => nil}) do
+    def websocket_handle({:text, _content}, req, %{:connection => nil}) do
         newState = %{:connection => :exist}
         {:reply, {:text, "NIL"}, req, newState}
     end
