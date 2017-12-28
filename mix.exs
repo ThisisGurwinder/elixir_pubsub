@@ -15,7 +15,7 @@ defmodule ElixirPubsub.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [
-      mod: { ElixirPubsubHttp, [ ElixirPubsubConnection.Supervisor ] },
+      mod: { ElixirPubsubConnection.Supervisor, ElixirPubsubHttp, [] },
       applications: [:logger, :cowboy, :ranch]
     ]
   end
