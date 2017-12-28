@@ -4,6 +4,7 @@ defmodule ElixirPubsubConnection.Supervisor do
         IO.puts "Starting Elixir Pubsub Connection"
         result = init(self())
         IO.puts "Process ID Started #{inspect(result)}"
+        Process.register(result, __MODULE__)
     end 
 
     def start_connection(from, type, token) do
