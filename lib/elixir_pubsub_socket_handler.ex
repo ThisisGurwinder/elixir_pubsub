@@ -6,7 +6,7 @@ defmodule ElixirPubsubSocketHandler do
         cpid = spawn(fn -> init_long_lived() end)
         IO.puts "sending back response"
         :erlang.start_timer(1000, self, [])
-        {:cowboy_websocket, req, %{:connection => cpid}}
+        {:cowboy_websocket, req, %{:connection => "cpid"}}
     end
 
     def terminate(_reason, _req, _state)  do 
@@ -18,7 +18,7 @@ defmodule ElixirPubsubSocketHandler do
         {:reply, {:text, "NIL"}, req, newState}
     end
 
-    def websocket_handle({:text, _content}, req, state = %{:connection => cpid}) do
+    def websocket_handle({:text, _content}, req, %{:connection => cpid} = state) do
         {:reply, {:text, inspect(cpid)}, req, state}
     end
 
