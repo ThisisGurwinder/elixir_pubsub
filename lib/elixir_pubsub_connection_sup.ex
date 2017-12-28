@@ -1,10 +1,8 @@
 defmodule ElixirPubsubConnection.Supervisor do
     defstruct parent: nil
     def start() do
-        IO.puts "Starting Elixir Pubsub Connection"
-        result = init(self())
-        IO.puts "Process ID Started #{inspect(result)}"
-        Process.register(result, __MODULE__)
+        {:ok, pid} = init(self())
+        Process.register(pid, __MODULE__)
     end 
 
     def start_connection(from, type, token) do
