@@ -9,7 +9,7 @@ defmodule ElixirPubsubSocketHandler do
     def terminate(_reason, _req, _state)  do 
         :ok
     end
-
+    
     def websocket_handle({:text, _content}, req, %{:connection => nil}) do
         newState = %{:connection => :exist}
         {:reply, {:text, "NIL"}, req, newState}
