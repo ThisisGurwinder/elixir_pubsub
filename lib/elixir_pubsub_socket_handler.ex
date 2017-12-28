@@ -2,7 +2,7 @@ defmodule ElixirPubsubSocketHandler do
     @behaviour :cowboy_websocket
 
     def init(req, state) do
-        CPid = init_long_lived(),
+        CPid = init_long_lived()
         {:cowboy_websocket, req, %{:connection => nil}}
     end
 
