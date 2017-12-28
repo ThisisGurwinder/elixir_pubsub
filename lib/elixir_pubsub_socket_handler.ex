@@ -2,6 +2,7 @@ defmodule ElixirPubsubSocketHandler do
     @behaviour :cowboy_websocket
 
     def init(req, _state) do
+        IO.puts "Got the request to start Connection"
         {:ok, cpid} = init_long_lived()
         {:cowboy_websocket, req, %{:connection => cpid}}
     end
