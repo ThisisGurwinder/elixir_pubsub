@@ -16,11 +16,12 @@ defmodule ElixirPubsubConnection.Supervisor do
         # :ets.new(:elixir_pubsub_conn_bypid, [:set, :public, :named_table])
         # :ets.new(:elixir_pubsub_conn_bytok, [:set, :public, :named_table])
         Process.flag :trap_exit, true
-        pid = spawn loop(%ElixirPubsubConnection.Supervisor{parent: parent}, 0)
+        pid = spawn (fn -> loop(%ElixirPubsubConnection.Supervisor{parent: parent}, 0) end)
         {:ok, pid}
     end
 
     def loop(%ElixirPubsubConnection.Supervisor{parent: parent} = state, curConns) do
+        IO.puts "Started Process #{inspect(state)}"
         receive do
             :exit -> IO.puts("Exiting")
             {:start_connection, from, type, token} ->
