@@ -24,11 +24,11 @@ defmodule ElixirPubsubSocketHandler do
     end
 
     def websocket_handle(_frame, _req, state) do 
-        {:ok, state}
+        {:cowboy_websocket, state}
     end
 
     def websocket_info(_info, _req, state)  do
-        {:ok, state}
+        {:cowboy_websocket, state}
     end
 
     def create_connection(:permanent) do
