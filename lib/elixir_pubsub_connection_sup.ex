@@ -5,7 +5,7 @@ defmodule ElixirPubsubConnection.Supervisor do
     end 
 
     def start_connection(_From, _Type, _Token) do
-        # send __MODULE__, {__MODULE__, start_connection, From, Type, Token}
+        send __MODULE__, {__MODULE__, start_connection, From, Type, Token}
         # receive Ret -> Ret end
     end
 
@@ -13,19 +13,19 @@ defmodule ElixirPubsubConnection.Supervisor do
         # :ets.new(:elixir_pubsub_conn_bypid, [:set, :public, :named_table])
         # :ets.new(:elixir_pubsub_conn_bytok, [:set, :public, :named_table])
         # Process.flag :trap_exit, true
-        # loop(%__MODULE__{parent = Parent}, 0)
+        loop(%__MODULE__{parent = Parent}, 0)
     end
 
-    # def loop(State = %__MODULE__{parent = Parent}, CurConns) do
-    #     IO.puts "Done"
-    #     # receive do
-    #     #     {__MODULE__, start_connection, From, Type, Token} ->
-    #     #         send From, self()
-    #     #         IO.puts "Started Elixir Pubsub Connection Supervisor"
-    #     #         loop(State, CurConns+1)
-    #     #     Msg ->
-    #     #         send From, self()
-    #     #         IO.puts "Unknown Message Recieved #{Msg}"
-    #     # end
-    # end
+    def loop(State = %__MODULE__{parent = Parent}, CurConns) do
+        # IO.puts "Done"
+        receive do
+            {__MODULE__, start_connection, From, Type, Token} ->
+                send From, self()
+                IO.puts "Started Elixir Pubsub Connection Supervisor"
+                loop(State, CurConns+1)
+            Msg ->
+                send From, self()
+                IO.puts "Unknown Message Recieved #{Msg}"
+        end
+    end
 end
