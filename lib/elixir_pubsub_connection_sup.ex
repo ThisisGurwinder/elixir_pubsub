@@ -1,9 +1,7 @@
 defmodule ElixirPubsubConnection.Supervisor do
     defstruct parent: nil
-    def start_link(_) do
-        {ok, Pid} = spawn_link(__MODULE__, :init, [self]),
-        {ok, Pid}
-    end
+    def start_link(_) 
+    :do spawn_link(__MODULE__, :init, [self]),
 
     def start_connection(From, Type, Token) do
         send __MODULE__, {__MODULE__, start_connection, From, Type, Token}
@@ -18,14 +16,15 @@ defmodule ElixirPubsubConnection.Supervisor do
     end
 
     def loop(State = %__MODULE__{parent = Parent}, CurConns) do
-        receive do
-            {__MODULE__, start_connection, From, Type, Token} ->
-                send From, self()
-                IO.puts "Started Elixir Pubsub Connection Supervisor"
-                loop(State, CurConns+1)
-            Msg ->
-                send From, self()
-                IO.puts "Unknown Message Recieved #{Msg}"
-        end
+        IO.puts "Done"
+        # receive do
+        #     {__MODULE__, start_connection, From, Type, Token} ->
+        #         send From, self()
+        #         IO.puts "Started Elixir Pubsub Connection Supervisor"
+        #         loop(State, CurConns+1)
+        #     Msg ->
+        #         send From, self()
+        #         IO.puts "Unknown Message Recieved #{Msg}"
+        # end
     end
 end
