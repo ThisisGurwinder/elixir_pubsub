@@ -2,7 +2,7 @@ defmodule ElixirPubsubConnection.Supervisor do
     defstruct parent: nil
     def start() do
         IO.puts "Starting Elixir Pubsub Connection"
-        spawn_link(__MODULE__, :init, [self()])
+        spawn init(self()) end
     end 
 
     def start_connection(from, type, token) do
@@ -19,7 +19,7 @@ defmodule ElixirPubsubConnection.Supervisor do
     end
 
     def loop(%ElixirPubsubConnection.Supervisor{parent: parent} = state, curConns) do
-        # IO.puts "Done"
+        IO.puts "Done"
         receive do
             {__MODULE__, :start_connection, from, type, token} ->
                 IO.puts "Got the Start Connection #{inspect(from)} #{inspect(type)}"
