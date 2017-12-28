@@ -1,5 +1,5 @@
 defmodule ElixirPubsubConnection.Supervisor do
-    # defstruct parent: nil
+    defstruct parent: nil
     def start_link(_) do
         spawn_link(__MODULE__, :init, [self])
     end 
@@ -13,10 +13,10 @@ defmodule ElixirPubsubConnection.Supervisor do
         # :ets.new(:elixir_pubsub_conn_bypid, [:set, :public, :named_table])
         # :ets.new(:elixir_pubsub_conn_bytok, [:set, :public, :named_table])
         # Process.flag :trap_exit, true
-        loop(%__MODULE__{parent = Parent}, 0)
+        loop(%ElixirPubsubConnection.Supervisor{parent = Parent}, 0)
     end
 
-    def loop(State = %__MODULE__{parent = Parent}, CurConns) do
+    def loop(State = %ElixirPubsubConnection.Supervisor{parent = Parent}, CurConns) do
         # IO.puts "Done"
         receive do
             {__MODULE__, start_connection, From, Type, Token} ->
