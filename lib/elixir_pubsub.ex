@@ -1,3 +1,7 @@
 defmodule ElixirPubsub do
-    ElixirPubsubConnection.Supervisor.start_link()
+    def start do
+        ElixirPubsubConnection.Supervisor.start_link()
+    end
+
+    start()
 end

@@ -4,35 +4,35 @@ defmodule ElixirPubsubConnection.Supervisor do
         spawn_link(__MODULE__, :init, [self()])
     end 
 
-    def start_connection(_From, _Type, _Token) do
-        send __MODULE__, {__MODULE__, :start_connection, From, Type, Token}
+    def start_connection(from, type, token) do
+        send __MODULE__, {__MODULE__, :start_connection, from, type, token}
         receive do Ret -> Ret end
     end
 
-    def init(Parent) do
+    def init(parent) do
         # :ets.new(:elixir_pubsub_conn_bypid, [:set, :public, :named_table])
         # :ets.new(:elixir_pubsub_conn_bytok, [:set, :public, :named_table])
         # Process.flag :trap_exit, true
-        loop(%ElixirPubsubConnection.Supervisor{parent: Parent}, 0)
+        loop(%ElixirPubsubConnection.Supervisor{parent: parent}, 0)
     end
 
-    def loop(%ElixirPubsubConnection.Supervisor{parent: Parent} = State, CurConns) do
+    def loop(%ElixirPubsubConnection.Supervisor{parent: parent} = state, curConns) do
         # IO.puts "Done"
         receive do
-            {__MODULE__, :start_connection, From, Type, Token} ->
-                IO.puts "Got the Start Connection #{inspect(From)} #{inspect(Type)}"
-                case ElixirPubsubConnection.start_link(From, Type) do
+            {__MODULE__, :start_connection, from, type, token} ->
+                IO.puts "Got the Start Connection #{inspect(from)} #{inspect(type)}"
+                case ElixirPubsubConnection.start_link(from, type) do
                     {:ok, pid} ->
-                        send From, {:ok, pid}
+                        send from, {:ok, pid}
                         IO.puts "Started Elixir Pubsub Connection Supervisor"
-                        loop(State, CurConns+1)
+                        loop(state, curConns+1)
                     _ ->
-                        send From, {:ok, self()}
-                        loop(State, CurConns)
+                        send from, {:ok, self()}
+                        loop(state, curConns)
                 end;
-            Msg ->
+            msg ->
                 # send From, self()
-                IO.puts "Unknown Message Recieved #{Msg}"
+                IO.puts "Unknown Message Recieved #{msg}"
         end
     end
 end
