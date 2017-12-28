@@ -17,8 +17,8 @@ defmodule ElixirPubsubConnection.Supervisor do
 
     def loop(%ElixirPubsubConnection.Supervisor{parent: Parent} = State, CurConns) do
         # IO.puts "Done"
-        # receive do
-        #     {__MODULE__, start_connection, From, Type, Token} ->
+        receive do
+            {__MODULE__, start_connection, From, Type, Token} ->
         #         case ElixirPubsubConnection.start_link(From, Type) of
         #             {:ok, pid} ->
         #                 # send From, {:ok, pid}
@@ -27,9 +27,9 @@ defmodule ElixirPubsubConnection.Supervisor do
         #             _ ->
         #                 loop(State, CurConns)
         #         end;
-        #     Msg ->
-        #         # send From, self()
-        #         IO.puts "Unknown Message Recieved #{Msg}"
-        # end
+            Msg ->
+                # send From, self()
+                IO.puts "Unknown Message Recieved #{Msg}"
+        end
     end
 end
