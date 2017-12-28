@@ -11,12 +11,12 @@ defmodule ElixirPubsubSocketHandler do
     end
 
     def websocket_handle({:text, _content}, req, state = %{:connection => nil}) do
-        newState = %{:connection => "EXIST"}
+        newState = %{:connection => :exist}
         {:reply, {:text, "NIL"}, req, newState}
     end
 
-    def websocket_handle({:text, _content}, req, state = %{:connection => _Something}) do
-        {:reply, {:text, _Something}, req, state}
+    def websocket_handle({:text, _content}, req, state = %{:connection => :exist}) do
+        {:reply, {:text, "exist"}, req, state}
     end
 
     def websocket_handle(_frame, _req, state) do 
