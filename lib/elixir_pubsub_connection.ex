@@ -1,12 +1,12 @@
 defmodule ElixirPubsubConnection do
    use GenServer
 
-   def start_link(From, Type) do
-        GenServer.start_link(__MODULE__, :init, [From, Type])
+   def start_link(from, type) do
+        GenServer.start_link(__MODULE__, [from, type])
    end 
 
-   def start(From, Type) do
-        GenServer.start(__MODULE__, :init, [From, Type])
+   def start(from, type) do
+        GenServer.start(__MODULE__, [from, type])
    end
 
    def init([from, :permanent]) do
