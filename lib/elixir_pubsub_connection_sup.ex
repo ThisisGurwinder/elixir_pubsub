@@ -1,6 +1,6 @@
 defmodule ElixirPubsubConnection.Supervisor do
     defstruct parent: nil
-    def start_link(_) do
+    def start_link() do
         spawn_link(__MODULE__, :init, [self()])
     end 
 
