@@ -21,7 +21,7 @@ defmodule ElixirPubsubConnection.Supervisor do
 
     def loop(%ElixirPubsubConnection.Supervisor{parent: parent} = state, curConns) do
         IO.puts "Done"
-        receive do
+        receive do ->
             {__MODULE__, :start_connection, from, type, token} ->
                 IO.puts "Got the Start Connection #{inspect(from)} #{inspect(type)}"
                 case ElixirPubsubConnection.start_link(from, type) do
