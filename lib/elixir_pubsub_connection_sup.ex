@@ -19,6 +19,7 @@ defmodule ElixirPubsubConnection.Supervisor do
         # IO.puts "Done"
         receive do
             {__MODULE__, start_connection, From, Type, Token} ->
+                IO.puts "Started"
         #         case ElixirPubsubConnection.start_link(From, Type) of
         #             {:ok, pid} ->
         #                 # send From, {:ok, pid}
