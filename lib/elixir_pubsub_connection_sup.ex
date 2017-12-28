@@ -16,7 +16,7 @@ defmodule ElixirPubsubConnection.Supervisor do
         # :ets.new(:elixir_pubsub_conn_bypid, [:set, :public, :named_table])
         # :ets.new(:elixir_pubsub_conn_bytok, [:set, :public, :named_table])
         # Process.flag :trap_exit, true
-        loop(%ElixirPubsubConnection.Supervisor{parent: parent}, 0)
+        # loop(%ElixirPubsubConnection.Supervisor{parent: parent}, 0)
         {:ok, "done"}
     end
 
