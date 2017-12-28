@@ -15,8 +15,8 @@ defmodule ElixirPubsubSocketHandler do
         {:reply, {:text, "NIL"}, req, newState}
     end
 
-    def websocket_handle({:text, _content}, req, state = %{:connection => Something}) do
-        {:reply, {:text, Something}, req, state}
+    def websocket_handle({:text, _content}, req, state = %{:connection => _Something}) do
+        {:reply, {:text, _Something}, req, state}
     end
 
     def websocket_handle(_frame, _req, state) do 
