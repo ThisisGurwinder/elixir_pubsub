@@ -3,7 +3,7 @@ defmodule ElixirPubsubSocketHandler do
 
     def init(req, state) do
         CPid = init_long_lived()
-        {:cowboy_websocket, req, %{:connection => nil}}
+        {:cowboy_websocket, req, %{:connection => CPid}}
     end
 
     def terminate(_reason, _req, _state)  do 
@@ -15,8 +15,8 @@ defmodule ElixirPubsubSocketHandler do
         {:reply, {:text, "NIL"}, req, newState}
     end
 
-    def websocket_handle({:text, _content}, req, state = %{:connection => _Something }) do
-        {:reply, {:text, "EXIST"}, req, state}
+    def websocket_handle({:text, _content}, req, state = %{:connection => Something}) do
+        {:reply, {:text, Something}, req, state}
     end
 
     def websocket_handle(_frame, _req, state) do 
