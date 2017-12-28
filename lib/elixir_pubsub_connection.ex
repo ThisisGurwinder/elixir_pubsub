@@ -9,7 +9,7 @@ defmodule ElixirPubsubConnection do
         GenServer.start(__MODULE__, [From, Type])
    end
 
-   def init([From, :permanent]) do
+   def init([from, :permanent]) do
         IO.puts "Started \n"
    end
 end
