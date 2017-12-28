@@ -9,7 +9,7 @@ defmodule ElixirPubsubConnection.Supervisor do
         {ok, self()}
     end
 
-    def init(_Parent) do
+    def init(Parent) do
         # :ets.new(:elixir_pubsub_conn_bypid, [:set, :public, :named_table])
         # :ets.new(:elixir_pubsub_conn_bytok, [:set, :public, :named_table])
         # Process.flag :trap_exit, true
