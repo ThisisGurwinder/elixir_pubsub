@@ -6,6 +6,7 @@ defmodule ElixirPubsubConnection.Supervisor do
     end 
 
     def start_connection(from, type, token) do
+        IO.puts "GOing to start connection"
         send __MODULE__, {__MODULE__, :start_connection, from, type, token}
         receive do Ret -> Ret end
     end
@@ -28,6 +29,7 @@ defmodule ElixirPubsubConnection.Supervisor do
                         IO.puts "Started Elixir Pubsub Connection Supervisor"
                         loop(state, curConns+1)
                     _ ->
+                        IO.puts "Got the empty response"
                         send from, {:ok, self()}
                         loop(state, curConns)
                 end;
