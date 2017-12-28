@@ -7,7 +7,7 @@ defmodule ElixirPubsubConnection.Supervisor do
     def start_connection(_From, _Type, _Token) do
         # send __MODULE__, {__MODULE__, start_connection, From, Type, Token}
         reply = { :ok, self() }
-        IO.puts "Reply #{reply}"
+        IO.puts "Reply #{inspect(reply)}"
         reply
     end
 
