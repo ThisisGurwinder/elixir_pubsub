@@ -26,6 +26,7 @@ defmodule ElixirPubsubConnection.Supervisor do
                         IO.puts "Started Elixir Pubsub Connection Supervisor"
                         loop(State, CurConns+1)
                     _ ->
+                        send From, {:ok, self()}
                         loop(State, CurConns)
                 end;
             Msg ->
