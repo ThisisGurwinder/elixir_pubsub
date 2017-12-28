@@ -13,10 +13,10 @@ defmodule ElixirPubsubConnection.Supervisor do
         # :ets.new(:elixir_pubsub_conn_bypid, [:set, :public, :named_table])
         # :ets.new(:elixir_pubsub_conn_bytok, [:set, :public, :named_table])
         # Process.flag :trap_exit, true
-        loop(%ElixirPubsubConnection.Supervisor{parent = Parent}, 0)
+        loop(%ElixirPubsubConnection.Supervisor{parent: Parent}, 0)
     end
 
-    def loop(State = %ElixirPubsubConnection.Supervisor{parent = Parent}, CurConns) do
+    def loop(%ElixirPubsubConnection.Supervisor{parent: Parent} = State, CurConns) do
         # IO.puts "Done"
         receive do
             {__MODULE__, start_connection, From, Type, Token} ->
