@@ -3,5 +3,5 @@ defmodule ElixirPubsub do
         ElixirPubsubConnection.Supervisor.start_link()
     end
 
-    start()
+    ElixirPubsub.start()
 end
