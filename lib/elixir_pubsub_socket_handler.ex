@@ -5,8 +5,8 @@ defmodule ElixirPubsubSocketHandler do
         IO.puts "About to initialize Socket"
         {:ok, cpid} = init_long_lived()
         :erlang.start_timer(1000, self, [])
-        connection = %{ :connection => nil }
-        {:cowboy_websocket, req, state}
+        connection = %{ :connection => cpid }
+        {:cowboy_websocket, req, Map.merge(state, connection)}
     end
 
     def terminate(_reason, _req, _state)  do 
