@@ -55,6 +55,7 @@ defmodule ElixirPubsubConnection do
                     :false -> :erlang.start_timer(100000, self(), :trigger)
                     _ -> :erlang.start_timer(100000, self(), :trigger)
                 end
+        end
     end
     
     def send_transport(transport, msg, [], :permanent) do
