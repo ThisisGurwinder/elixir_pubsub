@@ -1,6 +1,7 @@
 defmodule ElixirPubsubConnection.Supervisor do
     defstruct parent: nil
     def start() do
+        IO.puts "About to start Elixir Pubsub Connection Sup"
         pid = spawn(fn -> init(self()) end)
         {:ok, pid}
     end 
@@ -13,11 +14,13 @@ defmodule ElixirPubsubConnection.Supervisor do
         :ets.new(:elixir_pubsub_conn_bypid, [:set, :public, :named_table])
         :ets.new(:elixir_pubsub_conn_bytok, [:set, :public, :named_table])
         Process.flag :trap_exit, true
+        IO.puts "About to spawn Loop"
         pid = spawn(fn -> loop(%ElixirPubsubConnection.Supervisor{parent: parent}, 0) end)
         :erlang.register(__MODULE__, pid)
     end
 
     def loop(%ElixirPubsubConnection.Supervisor{parent: parent} = state, curConns) do
+        IO.puts "Started Successfully Supervisor :PubsubConnection" 
         receive do
             {__MODULE__, :start_connection, from, type, token} ->
                 case ElixirPubsubConnection.start_link(from, type) do

@@ -16,6 +16,6 @@ defmodule ElixirPubsubSubscriber.Supervisor do
         #         :infinity,
         #         :worker,
         #         [:ridhm_pubsub_subscriber]
-        #         } ]}}
+        #         } ]}}s
     end
 end
