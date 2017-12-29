@@ -41,10 +41,10 @@ defmodule ElixirPubsubConnection.Supervisor do
                 exit(reason)
             {'EXIT', pid, reason} ->
                 report_error(pid, reason)
-                case :ets.lookup(elixir_pubsub_conn_bypid, pid) do
+                case :ets.lookup(:elixir_pubsub_conn_bypid, pid) do
                     [{_, token}] ->
-                        :ets.delete(elixir_pubsub_conn_bypid, pid)
-                        :ets.delete(elixir_pubsub_conn_bytok, token)
+                        :ets.delete(:elixir_pubsub_conn_bypid, pid)
+                        :ets.delete(:elixir_pubsub_conn_bytok, token)
                     [] ->
                         :ok
                 end
@@ -53,7 +53,7 @@ defmodule ElixirPubsubConnection.Supervisor do
                 :sys.handle_system_msg(msg, from, parent, __MODULE__, [],
                                             {state, curConns})
             {'$gen_call', {to, tag}, :which_children} ->
-                children = :ets.tab2list(elixir_pubsub_conn_bypid)
+                children = :ets.tab2list(:elixir_pubsub_conn_bypid)
                 send to, {tag, children}
                 loop(state, curConns)
             {'$gen_call', {to, tag}, :count_children} ->
