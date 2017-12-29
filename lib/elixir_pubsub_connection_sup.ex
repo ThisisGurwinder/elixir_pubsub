@@ -7,7 +7,7 @@ defmodule ElixirPubsubConnection.Supervisor do
     end 
 
     def start_connection(from, type, token) do
-        send __MODULE__, {:start_connection, from, type, token}
+        send __MODULE__, {__MODULE__, :start_connection, from, type, token}
         receive do Ret -> Ret end
     end
 
@@ -21,7 +21,7 @@ defmodule ElixirPubsubConnection.Supervisor do
     def loop(%ElixirPubsubConnection.Supervisor{parent: parent} = state, curConns) do
         receive do
             :exit -> IO.puts("Exiting")
-            {:start_connection, from, type, token} ->
+            {__MODULE__, :start_connection, from, type, token} ->
                 case ElixirPubsubConnection.start_link(from, type) do
                     {:ok, pid} ->
                         send from, {:ok, pid}
