@@ -23,6 +23,10 @@ defmodule ElixirPubsubSocketHandler do
     def websocket_info({:text, message}, req, state) do
         {:reply, {:text, inspect(message)}, req, state}
     end
+    def websocket_info({_timeout, _ref, _msg}, req, state) do
+        :erlang.start_timer(1000, self, [])
+        {:ok, state}
+    end
     def websocket_info(_info, _req, state) do
         {:ok, state}
     end
