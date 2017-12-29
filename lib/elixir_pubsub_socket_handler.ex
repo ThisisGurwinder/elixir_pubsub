@@ -3,7 +3,7 @@ defmodule ElixirPubsubSocketHandler do
 
     def init(req, _state) do
         # {:ok, cpid} = init_long_lived()
-        :erlang.start_timer(1000, self, [])
+        # :erlang.start_timer(1000, self, [])
         connection = %{ :connection => nil }
         {:cowboy_websocket, req, connection}
     end
