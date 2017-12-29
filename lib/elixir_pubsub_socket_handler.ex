@@ -16,6 +16,7 @@ defmodule ElixirPubsubSocketHandler do
         {:reply, {:text, "NIL"}, req, state}
     end
     def websocket_handle({:text, data}, req, %{:connection => cpid} = state) do
+
         GenServer.cast(cpid, {:process_message, data})
         {:ok, req, state}
     end
@@ -32,7 +33,9 @@ defmodule ElixirPubsubSocketHandler do
     end
 
     def create_connection(:permanent) do
-        ElixirPubsubConnection.Supervisor.start_connection(self(), :permanent, nil)
+        result = ElixirPubsubConnection.Supervisor.start_connection(self(), :permanent, nil)
+        IO.puts " Result #{inspect(result)}"
+        result
     end
 
     def init_long_lived do
