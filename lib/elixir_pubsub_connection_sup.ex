@@ -2,7 +2,6 @@ defmodule ElixirPubsubConnection.Supervisor do
     defstruct parent: nil
     def start() do
         pid = spawn(fn -> init(self()) end)
-        :erlang.register(__MODULE__, pid)
         {:ok, pid}
     end 
 
@@ -16,6 +15,7 @@ defmodule ElixirPubsubConnection.Supervisor do
         :ets.new(:elixir_pubsub_conn_bytok, [:set, :public, :named_table])
         Process.flag :trap_exit, true
         pid = spawn(fn -> loop(%ElixirPubsubConnection.Supervisor{parent: parent}, 0) end)
+        :erlang.register(__MODULE__, pid)
     end
 
     def loop(%ElixirPubsubConnection.Supervisor{parent: parent} = state, curConns) do
