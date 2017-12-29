@@ -6,7 +6,7 @@ defmodule ElixirPubsubSubscriber.Supervisor do
     end
     def start_child(args) do
         Supervisor.start_child(__MODULE__, args)
-
+    end
     def init(_) do
         {:ok, {{:simple_one_for_one, 5, 10}, [
         {:elixir_pubsub_subscriber,
@@ -15,6 +15,6 @@ defmodule ElixirPubsubSubscriber.Supervisor do
             :infinity,
             :worker,
             [:ridhm_pubsub_subscriber]
-        } ]}}
+            } ]}}
     end
 end
