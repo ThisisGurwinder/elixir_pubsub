@@ -49,7 +49,7 @@ defmodule ElixirPubsubConnection do
     def process_message([{"subscribe", channel}], %{:subscribers => subscribers, :user_id => UserId} = state ) do
         new_subs = case :dict.find(channel, subscribers) do
                         error ->
-                            {:ok, subscriberPid} = elixir_pubsub_subscriber.Supervisor.start_child([channel, userid, self()])
+                            {:ok, subscriberPid} = ElixirPubsubSubscriber.Supervisor.start_child([channel, userid, self()])
                             case elixir_pubsub_subscriber.subscribe(subscriberPid) do
                                 :ok -> :dict.store(channel, subscriberPid, subscribers)
                                         send self(), {:just_send, "Subscribed To Channel #{inspect(channel)} and channels #{inspect(subscribers)}"}
