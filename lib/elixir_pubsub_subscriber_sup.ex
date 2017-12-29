@@ -8,13 +8,14 @@ defmodule ElixirPubsubSubscriber.Supervisor do
         Supervisor.start_child(__MODULE__, args)
     end
     def init(_) do
-        {:ok, {{:simple_one_for_one, 5, 10}, [
-        {:elixir_pubsub_subscriber,
-            {:elixir_pubsub_subscriber, :start_link, []},
-            :temporary,
-            :infinity,
-            :worker,
-            [:ridhm_pubsub_subscriber]
-            } ]}}
+        {:ok, {{:one_for_one, 10, 10}, []}}
+        # {:ok, {{:simple_one_for_one, 5, 10}, [
+        #     {:elixir_pubsub_subscriber,
+        #         {:elixir_pubsub_subscriber, :start_link, []},
+        #         :temporary,
+        #         :infinity,
+        #         :worker,
+        #         [:ridhm_pubsub_subscriber]
+        #         } ]}}
     end
 end
