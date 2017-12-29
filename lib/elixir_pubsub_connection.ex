@@ -10,6 +10,7 @@ defmodule ElixirPubsubConnection do
    end
 
    def init([from, :permanent]) do
+        IO.puts "Sending Back Response Done"
         {:ok, %{}}
    end
 end
