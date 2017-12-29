@@ -4,7 +4,7 @@ defmodule ElixirPubsubConnection.Supervisor do
         pid = spawn(fn -> init(self()) end)
         {:ok, pid}
     end 
-
+ 
     def start_connection(from, type, token) do
         send __MODULE__, {__MODULE__, :start_connection, from, type, token}
     end

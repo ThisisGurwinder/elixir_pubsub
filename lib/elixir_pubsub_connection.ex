@@ -12,8 +12,8 @@ defmodule ElixirPubsubConnection do
    def init([from, :permanent]) do
         Process.flag :trap_exit, true
         {:ok, %{
-            :publishers => %{},
-            :subscribers => %{},
+            :publishers => :dict.new(),
+            :subscribers => :dict.new(),
             :transport => from,
             :user_id => :anonymous,
             :transport_state => :permanent,
@@ -28,7 +28,7 @@ defmodule ElixirPubsubConnection do
                     _ -> reset_timer(timer)
                 end
         _state_new = case JSEX.decode message do
-                        {:ok, parsed_message} -> send self(), {:just_send, "MESSAGE PARSED" }
+                        {:ok, parsed_message} -> process_message(:lists.keysort(1, message), state)
                         {:error, :badarg} -> send self(), {:just_send, "BAD ARGUMENT" }
                 end
         {:noreply, Map.merge(state, %{:timer => timer2})}
@@ -44,6 +44,22 @@ defmodule ElixirPubsubConnection do
     end
     def handle_info(info, state) do
         {:stop, {:unhandled_message, info}, state}
+    end
+
+    def process_message([{"subscribe", channel}], %{:subscribers => subscribers, :user_id => UserId} = state ) do
+        new_subs = case :dict.find(channel, subscribers) do
+                        error ->
+                            {:ok, subscriberPid} = elixir_pubsub_subscriber.Supervisor.start_child([channel, userid, self()])
+                            case elixir_pubsub_subscriber.subscribe(subscriberPid) do
+                                :ok -> :dict.store(channel, subscriberPid, subscribers);
+                                {:error, error} -> send self(), {just_send, error}
+                                                subscribers
+                    end
+        Map.merge(state, %{:subscribers => new_subs})
+    end
+    def process_message(_message, state) do
+        send self(), {:just_send, "Unknown message received"}
+        state
     end
 
     def reset_timer(timer) do
