@@ -2,8 +2,9 @@ defmodule ElixirPubsubSocketHandler do
     @behaviour :cowboy_websocket
 
     def init(req, _state) do
-        # {:ok, cpid} = init_long_lived()
-        # :erlang.start_timer(1000, self, [])
+        IO.puts "About to initialize Socket"
+        {:ok, cpid} = init_long_lived()
+        :erlang.start_timer(1000, self, [])
         connection = %{ :connection => nil }
         {:cowboy_websocket, req, connection}
     end
@@ -31,11 +32,13 @@ defmodule ElixirPubsubSocketHandler do
     end
 
     def create_connection(:permanent) do
+        IO.puts "Inside create_connection :permanent "
         ElixirPubsubConnection.Supervisor.start_connection(self(), :permanent, nil)
         receive do ret -> ret end
     end
 
     def init_long_lived do
+        IO.puts "Going to create_connection (permanent)"
         create_connection(:permanent)
     end
 end
