@@ -42,8 +42,8 @@ defmodule ElixirPubsubConnection do
         new_buffer = send_transport(transport, {:message, message}, buffer, tstate)
         {:noreply, %{:buffer => new_buffer}}
     end
-    def handle_info(_info, state) do
-        {:stop, {:unhandled_message, _info}, _state}
+    def handle_info(info, state) do
+        {:stop, {:unhandled_message, info}, state}
     end
 
     def reset_timer(timer) do
