@@ -62,7 +62,7 @@ defmodule ElixirPubsubConnection do
         send transport, {:text, message}
     end
     def send_transport(transport, {:message, message}, buffer, :temporary) do
-        flush_buffer(transport, buffer++[message]),
+        flush_buffer(transport, buffer++[message])
         []
     end
     def send_transport(_transport, {:message, message}, buffer, :hiatus) do
