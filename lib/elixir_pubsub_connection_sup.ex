@@ -9,7 +9,7 @@ defmodule ElixirPubsubConnection.Supervisor do
         send __MODULE__, {__MODULE__, :start_connection, from, type, token}
         receive do Ret -> Ret end
     end
-
+ 
     def init(parent) do
         :ets.new(:elixir_pubsub_conn_bypid, [:set, :public, :named_table])
         :ets.new(:elixir_pubsub_conn_bytok, [:set, :public, :named_table])
@@ -23,16 +23,19 @@ defmodule ElixirPubsubConnection.Supervisor do
             {__MODULE__, :start_connection, from, type, token} ->
                 case ElixirPubsubConnection.start_link(from, type) do
                     {:ok, pid} ->
+                        IO.puts "GOT THE RESPONSE FROM #{inspect(pid)}"
                         send from, {:ok, pid}
                         case type do
                             :itermittent ->
                                 :ets.insert(:elixir_pubsub_conn_bypid, {token, pid})
                                 :ets.insert(:elixir_pubsub_conn_bytok, {pid, token})
                             _ ->
+                                IO.puts "GOT THE RESPONSE FROM 2 #{inspect(pid)}"
                                 :ok
                         end
                         loop(state, curConns+1)
                     _ ->
+                        IO.puts "GOT THE RESPONSE FROM #{inspect(pid)}"
                         send from, self()
                         loop(state, curConns)
                 end;
