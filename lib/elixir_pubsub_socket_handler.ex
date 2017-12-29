@@ -18,17 +18,17 @@ defmodule ElixirPubsubSocketHandler do
     end
     def websocket_handle({:text, data}, req, %{:connection => cpid} = state) do
         GenServer.cast(cpid, {:process_message, data})
-        {:ok, req, state}
+        {:reply, {:text, "Processes"}, req, state}
     end
     def websocket_handle(_frame, req, state) do
-        {:ok, req, state}
+        {:ok, state}
     end
 
     def websocket_info({:text, message}, req, state) do
         {:reply, {:text, inspect(message)}, req, state}
     end
     def websocket_info(_info, req, state)  do
-        {:ok, req, state}
+        {:ok, state}
     end
 
     def create_connection(:permanent) do
