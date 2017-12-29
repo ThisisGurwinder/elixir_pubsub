@@ -39,7 +39,7 @@ defmodule ElixirPubsubConnection do
         {:noreply, _state}
     end
 
-    def handle_info({:just_send, _message}, %{:transport => transport, :buffer => buffer, :transport_state => tstate}) do
+    def handle_info({:just_send, _message}, %{:transport => transport, :buffer => buffer, :transport_state => tstate} = state) do
         new_buffer = send_transport(transport, {:message, _message}, buffer, tstate)
         {:noreply, %{:buffer => new_buffer}}
     end
