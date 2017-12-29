@@ -12,6 +12,7 @@ defmodule ElixirPubsubHttp do
     end
 
     def build_dispatch_config do
+        IO.puts "About to compile dispatch"
         :cowboy_router.compile([
             { :_,
                 [
