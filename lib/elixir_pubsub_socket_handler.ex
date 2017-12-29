@@ -16,7 +16,6 @@ defmodule ElixirPubsubSocketHandler do
         {:reply, {:text, "NIL"}, req, state}
     end
     def websocket_handle({:text, data}, req, %{:connection => cpid} = state) do
-
         GenServer.cast(cpid, {:process_message, data})
         {:ok, req, state}
     end
@@ -25,8 +24,7 @@ defmodule ElixirPubsubSocketHandler do
     end
 
     def websocket_info({:text, message}, req, state) do
-        IO.puts "Got the text response #{inspect(message)}"
-        {:reply, req, state}
+        {:reply, {:text, inspect(message)}, req, state}
     end
     def websocket_info(_info, req, state)  do
         {:ok, req, state}

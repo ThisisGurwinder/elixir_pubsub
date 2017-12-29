@@ -29,12 +29,10 @@ defmodule ElixirPubsubConnection.Supervisor do
                                 :ets.insert(:elixir_pubsub_conn_bypid, {token, pid})
                                 :ets.insert(:elixir_pubsub_conn_bytok, {pid, token})
                             _ ->
-                                IO.puts "GOT THE RESPONSE FROM 2 #{inspect(pid)}"
                                 :ok
                         end
                         loop(state, curConns+1)
                     _ ->
-                        IO.puts "GOT THE RESPONSE FROM 3"
                         send from, self()
                         loop(state, curConns)
                 end;
