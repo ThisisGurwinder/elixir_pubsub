@@ -70,7 +70,7 @@ defmodule ElixirPubsubConnection do
     end
 
     def flush_buffer(transport, messages) do
-        transport ! {list, messages}
+        send transport, {:list, messages}
     end
 
     def timer_status(%{:timer => timer}) do
