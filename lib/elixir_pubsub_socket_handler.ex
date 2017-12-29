@@ -9,36 +9,37 @@ defmodule ElixirPubsubSocketHandler do
         {:cowboy_websocket, req, state}
     end
 
-    def websocket_handle({:text, _content}, req, state) do
-        {:reply, {:text, "NIL"}, req, state}
-    end
-    def websocket_handle({:text, data}, req, state) do
-        # GenServer.cast(cpid, {:process_message, data})
-        {:reply, {:text, "Processes"}, req, state}
-    end
-    def websocket_handle(_frame, _req, state) do
-        {:ok, state}
-    end
+    def terminate(_reason, _req, _state) do
+    :ok
+  end
+  
+    def websocket_handle({:text, content}, req, state) do
+    { :ok, %{ "message" => message} } = JSEX.decode(content)
 
-    def websocket_info({:text, message}, req, state) do
-        {:reply, {:text, inspect(message)}, req, state}
-    end
-    def websocket_info(_info, _req, state)  do
-        {:ok, state}
-    end
+    rev = String.reverse(message)
+    { :ok, reply } = JSEX.encode(%{ reply: rev})
+    {:reply, {:text, reply}, req, state}
+  end
 
-    def terminate(_reason, _req, _state)  do 
-        :ok
-    end
+  def websocket_handle(_frame, _req, state) do
+    {:ok, state}
+  end
+  def websocket_info({_timeout, _ref, _msg}, req, state) do
 
-    def create_connection(:permanent) do
-        IO.puts "Inside create_connection :permanent "
-        ElixirPubsubConnection.Supervisor.start_connection(self(), :permanent, nil)
-        receive do ret -> ret end
-    end
+    time = time_as_string()
+    { :ok, message } = JSEX.encode(%{ time: time})
+    :erlang.start_timer(1000, self, [])
+    { :reply, {:text, message}, req, state}
+  end
 
-    def init_long_lived do
-        IO.puts "Going to create_connection (permanent)"
-        create_connection(:permanent)
-    end
+  def websocket_info(_info, _req, state) do
+    {:ok, state}
+  end
+
+  def time_as_string do
+    {hh, mm, ss} = :erlang.time()
+    :io_lib.format("~2.10.0B:~2.10.0B:~2.10.0B", [hh, mm, ss])
+    |> :erlang.list_to_binary()
+  end
+
 end
