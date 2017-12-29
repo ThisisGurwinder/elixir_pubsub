@@ -46,6 +46,17 @@ defmodule ElixirPubsubConnection do
         {:stop, {:unhandled_message, _info}, _state}
     end
 
+    def reset_timer(timer) do
+        case timer do
+            :undefined ->
+                :undefined;
+            timer_ref ->
+                case catch :erlang.cancel_timer(timer_ref) do
+                    :false -> :erlang.start_timer(100000, self(), :trigger)
+                    _ -> :erlang.start_timer(100000, self(), :trigger)
+                end
+    end
+    
     def send_transport(transport, msg, [], :permanent) do
         send transport, {:text, msg}
     end
