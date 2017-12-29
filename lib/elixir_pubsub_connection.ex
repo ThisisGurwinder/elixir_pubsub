@@ -51,7 +51,7 @@ defmodule ElixirPubsubConnection do
             :undefined ->
                 :undefined;
             timer_ref ->
-                case catch :erlang.cancel_timer(timer_ref) do
+                case :erlang.cancel_timer(timer_ref) do
                     :false -> :erlang.start_timer(100000, self(), :trigger)
                     _ -> :erlang.start_timer(100000, self(), :trigger)
                 end
