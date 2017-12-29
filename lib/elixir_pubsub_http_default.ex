@@ -1,5 +1,6 @@
 defmodule ElixirPubsubHttpDefault do
     def init(req, state) do
+        IO.puts "Default Http Response"
         handle(req, state)
     end
 
