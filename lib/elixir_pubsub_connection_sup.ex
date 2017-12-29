@@ -7,7 +7,6 @@ defmodule ElixirPubsubConnection.Supervisor do
 
     def start_connection(from, type, token) do
         send __MODULE__, {__MODULE__, :start_connection, from, type, token}
-        receive do Ret -> Ret end
     end
  
     def init(parent) do
