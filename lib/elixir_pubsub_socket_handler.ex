@@ -34,7 +34,7 @@ defmodule ElixirPubsubSocketHandler do
 
     def create_connection(:permanent) do
         ElixirPubsubConnection.Supervisor.start_connection(self(), :permanent, nil)
-        result = receive do Ret -> Ret end
+        result = receive do ret -> ret end
         IO.puts "REsult Is #{inspect(result)}"
         result
     end
