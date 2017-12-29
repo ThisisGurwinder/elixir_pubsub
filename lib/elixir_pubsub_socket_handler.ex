@@ -20,7 +20,7 @@ defmodule ElixirPubsubSocketHandler do
         {:ok, state}
     end
     
-    def websocket_handle({:text, message}, req, state) do
+    def websocket_info({:text, message}, req, state) do
         {:reply, {:text, inspect(message)}, req, state}
     end
     def websocket_info({_timeout, _ref, _msg}, req, state) do
