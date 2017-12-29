@@ -53,7 +53,7 @@ defmodule ElixirPubsubConnection do
                             case ElixirPubsubSubscriber.subscribe(subscriberPid) do
                                 :ok -> :dict.store(channel, subscriberPid, subscribers)
                                         send self(), {:just_send, "Subscribed To Channel #{inspect(channel)} and channels #{inspect(subscribers)}"}
-                                {:error, error} -> send self(), {just_send, error}
+                                {:error, error} -> send self(), {:just_send, error}
                                                 subscribers
                         end
                 end
