@@ -22,7 +22,6 @@ defmodule ElixirPubsubConnection.Supervisor do
             {__MODULE__, :start_connection, from, type, token} ->
                 case ElixirPubsubConnection.start_link(from, type) do
                     {:ok, pid} ->
-                        IO.puts "GOT THE RESPONSE FROM #{inspect(pid)}"
                         send from, {:ok, pid}
                         case type do
                             :itermittent ->
