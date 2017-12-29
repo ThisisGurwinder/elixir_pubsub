@@ -55,7 +55,8 @@ defmodule ElixirPubsubConnection do
                                         send self(), {:just_send, "Subscribed To Channel #{inspect(channel)} and channels #{inspect(subscribers)}"}
                                 {:error, error} -> send self(), {just_send, error}
                                                 subscribers
-                    end
+                        end
+                end
         Map.merge(state, %{:subscribers => new_subs})
     end
     def process_message(_message, state) do
