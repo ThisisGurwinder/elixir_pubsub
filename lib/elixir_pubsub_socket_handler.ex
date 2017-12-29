@@ -12,8 +12,8 @@ defmodule ElixirPubsubSocketHandler do
         :ok
     end
 
-    def websocket_handle({:text, _content}, req, %{:connection => nil}) do
-        {:reply, {:text, "NIL"}, req, newState}
+    def websocket_handle({:text, _content}, req, %{:connection => nil} = state) do
+        {:reply, {:text, "NIL"}, req, state}
     end
     def websocket_handle({:text, data}, req, %{:connection => cpid} = state) do
         GenServer.cast(cpid, {:process_message, data})
