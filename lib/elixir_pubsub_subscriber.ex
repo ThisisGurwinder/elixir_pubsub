@@ -58,11 +58,13 @@ defmodule ElixirPubsubSubscriber do
             :true -> subscribe_in_router(channel. user_id)
                 :ok
             error -> {:error, error}
+        end
     end
     def can_subscribe(user_id, channel) do
         case Application.get_env(:ridhm_pubsub, :subscribe_authorization) do
             :undefined -> :true
             {:ok, auth_config} -> elixir_pubsub_authorization.check_authorization(userid, channel, auth_config)
+        end
     end
     def subscribe_in_router(channel, user_id) do
         :ok = GenServer.cast(:ridhm_pubsub_router, {:subscribe, channel, :from, self(), :user_id, user_id})
