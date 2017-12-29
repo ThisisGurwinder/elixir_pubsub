@@ -89,4 +89,5 @@ defmodule ElixirPubsubConnection.Supervisor do
     end
     def report_error(ref, reason) do
         IO.puts "Exited with ref #{inspect(ref)} and reason #{inspect(reason)}"
+    end
 end
