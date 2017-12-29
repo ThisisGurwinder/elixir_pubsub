@@ -39,11 +39,12 @@ defmodule ElixirPubsubConnection do
         {:noreply, _state}
     end
 
-    def handle_info({:just_send, message}, %{:transport => transport, :buffer => buffer, :transport_state => tstate}) do
-        new_buffer = send_transport(transport, {:message, message}, buffer, tstate)
+    def handle_info({:just_send, _message}, %{:transport => transport, :buffer => buffer, :transport_state => tstate}) do
+        new_buffer = send_transport(transport, {:message, _message}, buffer, tstate)
         {:noreply, %{:buffer => new_buffer}}
     end
     def handle_info(info, state) do
+
         {:stop, {:unhandled_message, info}, state}
     end
 
@@ -59,8 +60,8 @@ defmodule ElixirPubsubConnection do
         end
     end
     
-    def send_transport(transport, msg, [], :permanent) do
-        send transport, {:text, msg}
+    def send_transport(transport, {:message, message}, [], :permanent) do
+        send transport, {:text, message}
     end
 
     def timer_status(%{:timer => timer}) do
