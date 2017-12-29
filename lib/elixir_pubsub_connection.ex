@@ -51,7 +51,8 @@ defmodule ElixirPubsubConnection do
                         error ->
                             {:ok, subscriberPid} = elixir_pubsub_subscriber.Supervisor.start_child([channel, userid, self()])
                             case elixir_pubsub_subscriber.subscribe(subscriberPid) do
-                                :ok -> :dict.store(channel, subscriberPid, subscribers);
+                                :ok -> :dict.store(channel, subscriberPid, subscribers)
+                                        send self(), {:just_send, "Subscribed To Channel #{inspect(channel)} and channels #{inspect(subscribers)}"}
                                 {:error, error} -> send self(), {just_send, error}
                                                 subscribers
                     end
