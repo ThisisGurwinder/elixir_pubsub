@@ -16,14 +16,13 @@ defmodule ElixirPubsubConnection do
             :subscribers => %{},
             :transport => from,
             :user_id => :anonymous,
-            :transport_state => :temporary,
+            :transport_state => :permanent,
             :buffer => [],
             :timer => :erlang.start_timer(1000000, self(), :trigger)
         }}
    end
 
    def handle_cast({:process_message, message}, %{:timer => timer, :transport_state => ts} = state) do
-        IO.puts "Got The Cast #{inspect(message)}"
         timer2 = case ts do
                     :permanent -> :undefined
                     _ -> reset_timer(timer)
@@ -61,6 +60,17 @@ defmodule ElixirPubsubConnection do
     
     def send_transport(transport, {:message, message}, [], :permanent) do
         send transport, {:text, message}
+    end
+    def send_transport(transport, {:message, message}, buffer, :temporary) do
+        flush_buffer(transport, buffer++[message]),
+        []
+    end
+    def send_transport(_transport, {:message, message}, buffer, :hiatus) do
+        buffer++[message]
+    end
+
+    def flush_buffer(transport, messages) do
+        transport ! {list, messages}
     end
 
     def timer_status(%{:timer => timer}) do
