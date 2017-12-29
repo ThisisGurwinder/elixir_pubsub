@@ -20,14 +20,14 @@ defmodule ElixirPubsubSocketHandler do
         GenServer.cast(cpid, {:process_message, data})
         {:reply, {:text, "Processes"}, req, state}
     end
-    def websocket_handle(_frame, req, state) do
+    def websocket_handle(_frame, _req, state) do
         {:ok, state}
     end
 
     def websocket_info({:text, message}, req, state) do
         {:reply, {:text, inspect(message)}, req, state}
     end
-    def websocket_info(_info, req, state)  do
+    def websocket_info(_info, _req, state)  do
         {:ok, state}
     end
 
