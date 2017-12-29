@@ -55,7 +55,7 @@ defmodule ElixirPubsubSubscriber do
 
     def maybe_subscribe(user_id, channel) do
         case can_subscribe(user_id, channel) do
-            :true -> subscribe_in_router(channel. user_id)
+            :true -> subscribe_in_router(channel, user_id)
                 :ok
             error -> {:error, error}
         end
