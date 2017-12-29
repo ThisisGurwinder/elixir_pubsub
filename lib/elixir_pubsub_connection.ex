@@ -50,7 +50,7 @@ defmodule ElixirPubsubConnection do
         send transport, {:text, msg}
     end
 
-    def timer_status(%{:timer = timer}) do
+    def timer_status(%{:timer => timer}) do
         :erlang.read_timer(timer)
     end
 end
