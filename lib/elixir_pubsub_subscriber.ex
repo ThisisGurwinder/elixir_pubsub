@@ -30,7 +30,7 @@ defmodule ElixirPubsubSubscriber do
         {:stop, :normal, state}
     end
 
-    def handle_call(:subscribe, _from, %{:channel => channel, :user_id = user_id} = state) do
+    def handle_call(:subscribe, _from, %{:channel => channel, :user_id => user_id} = state) do
         IO.puts "Subscribe :: Channel #{inspect(channel)} and user_id #{inspect(user_id)}"
         res = maybe_subscribe(user_id, channel)
         {:reply, res, state}
