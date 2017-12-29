@@ -1,44 +1,92 @@
 defmodule ElixirPubsubConnection.Supervisor do
     defstruct parent: nil
     def start() do
-        {:ok, pid} = init(self())
+        pid = spawn(fn -> init(self()) end)
         Process.register(pid, __MODULE__)
+        {:ok, pid}
     end 
 
     def start_connection(from, type, token) do
-        IO.puts "GOing to start connection"
         send __MODULE__, {:start_connection, from, type, token}
         receive do Ret -> Ret end
     end
 
     def init(parent) do
-        # :ets.new(:elixir_pubsub_conn_bypid, [:set, :public, :named_table])
-        # :ets.new(:elixir_pubsub_conn_bytok, [:set, :public, :named_table])
+        :ets.new(:elixir_pubsub_conn_bypid, [:set, :public, :named_table])
+        :ets.new(:elixir_pubsub_conn_bytok, [:set, :public, :named_table])
         Process.flag :trap_exit, true
         pid = spawn(fn -> loop(%ElixirPubsubConnection.Supervisor{parent: parent}, 0) end)
-        {:ok, pid}
     end
 
     def loop(%ElixirPubsubConnection.Supervisor{parent: parent} = state, curConns) do
-        IO.puts "Started Process #{inspect(state)}"
         receive do
             :exit -> IO.puts("Exiting")
             {:start_connection, from, type, token} ->
-                IO.puts "Got the Start Connection #{inspect(from)} #{inspect(type)}"
                 case ElixirPubsubConnection.start_link(from, type) do
                     {:ok, pid} ->
                         send from, {:ok, pid}
-                        IO.puts "Started Elixir Pubsub Connection Supervisor"
+                        case type do
+                            :itermittent ->
+                                :ets.insert(:elixir_pubsub_conn_bypid, {token, pid})
+                                :ets.insert(:elixir_pubsub_conn_bytok, {pid, token})
+                            _ ->
+                                :ok
+                        end
                         loop(state, curConns+1)
                     _ ->
-                        IO.puts "Got the empty response"
-                        send from, {:ok, self()}
+                        send from, self()
                         loop(state, curConns)
                 end;
-            msg ->
-                # send From, self()
-                IO.puts "Unknown Message Recieved #{inspect(msg)}"
+            {'EXIT', parent, reason} ->
+                exit(reason)
+            {'EXIT', pid, reason} ->
+                report_error(pid, reason)
+                case :ets.lookup(elixir_pubsub_conn_bypid, pid) do
+                    [{_, token}] ->
+                        :ets.delete(elixir_pubsub_conn_bypid, pid)
+                        :ets.delete(elixir_pubsub_conn_bytok, token)
+                    [] ->
+                        :ok
+                end
+                loop(state, curConns-1)
+            {:system, from, msg} ->
+                :sys.handle_system_msg(msg, from, parent, __MODULE__, [],
+                                            {state, curConns})
+            {'$gen_call', {to, tag}, :which_children} ->
+                children = :ets.tab2list(elixir_pubsub_conn_bypid)
+                send to, {tag, children}
                 loop(state, curConns)
+            {'$gen_call', {to, tag}, :count_children} ->
+                counts = [{:supervisors, 0}, {:workers, curConns}]
+                counts2 = [{:specs, 1}, {:active, curConns} | counts]
+                send to , {tag, counts2}
+                loop(state, curConns)
+            msg ->
+                IO.puts "Unknown message received #{inspect(msg)}"
         end
     end
+
+    def system_continue(_, _, {state, curConns}) do
+        loop(state, curConns)
+    end
+
+    def system_terminate(reason, _, _, _) do
+        exit(reason)
+    end
+
+    def system_code_change(misc, _, _, _) do
+        {:ok, misc}
+    end
+
+    def report_normal(_, :normal) do
+        :ok
+    end
+    def report_normal(_, :shutdown) do
+        :ok
+    end
+    def report_error(_, {:shutdown, _}) do
+        :ok
+    end
+    def report_error(ref, reason) do
+        IO.puts "Exited with ref #{inspect(ref)} and reason #{inspect(reason)}"
 end
