@@ -6,7 +6,7 @@ defmodule ElixirPubsubSocketHandler do
         {:ok, cpid} = init_long_lived()
         :erlang.start_timer(1000, self, [])
         connection = %{ :connection => cpid }
-        {:cowboy_websocket, req, Map.merge(state, connection)}
+        {:cowboy_websocket, req, connection}
     end
 
     def terminate(_reason, _req, _state)  do 
