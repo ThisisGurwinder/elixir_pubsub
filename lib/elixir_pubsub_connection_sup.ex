@@ -35,7 +35,7 @@ defmodule ElixirPubsubConnection.Supervisor do
                         end
                         loop(state, curConns+1)
                     _ ->
-                        IO.puts "GOT THE RESPONSE FROM #{inspect(pid)}"
+                        IO.puts "GOT THE RESPONSE FROM 3"
                         send from, self()
                         loop(state, curConns)
                 end;
