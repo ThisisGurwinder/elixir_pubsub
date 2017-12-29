@@ -20,7 +20,6 @@ defmodule ElixirPubsubConnection.Supervisor do
 
     def loop(%ElixirPubsubConnection.Supervisor{parent: parent} = state, curConns) do
         receive do
-            :exit -> IO.puts("Exiting")
             {__MODULE__, :start_connection, from, type, token} ->
                 case ElixirPubsubConnection.start_link(from, type) do
                     {:ok, pid} ->
@@ -30,7 +29,6 @@ defmodule ElixirPubsubConnection.Supervisor do
                                 :ets.insert(:elixir_pubsub_conn_bypid, {token, pid})
                                 :ets.insert(:elixir_pubsub_conn_bytok, {pid, token})
                             _ ->
-                                IO.puts "Got the Type response"
                                 :ok
                         end
                         loop(state, curConns+1)

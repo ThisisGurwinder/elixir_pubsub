@@ -2,11 +2,9 @@ defmodule ElixirPubsubSocketHandler do
     @behaviour :cowboy_websocket
 
     def init(req, _state) do
-        IO.puts "Got the request to start Connection"
         cpid = spawn(fn -> init_long_lived() end)
-        IO.puts "sending back response"
         :erlang.start_timer(1000, self, [])
-        connection = %{:connection => cpid }
+        connection = %{ :connection => cpid }
         {:cowboy_websocket, req, connection}
     end
 
@@ -15,18 +13,20 @@ defmodule ElixirPubsubSocketHandler do
     end
 
     def websocket_handle({:text, _content}, req, %{:connection => nil}) do
-        newState = %{:connection => :exist}
         {:reply, {:text, "NIL"}, req, newState}
     end
-
-    def websocket_handle({:text, _content}, req, %{:connection => cpid} = state) do
-        {:reply, {:text, inspect(cpid)}, req, state}
+    def websocket_handle({:text, data}, req, %{:connection => cpid} = state) do
+        GenServer.cast(cpid, {:process_message, data})
+        {:ok, req, state}
     end
-
     def websocket_handle(_frame, req, state) do 
         {:ok, req, state}
     end
 
+    def websocket_info({:text, message}, req, state) do
+        IO.puts "Got the text response #{inspect(message)}"
+        {:reply, req, state}
+    end
     def websocket_info(_info, req, state)  do
         {:ok, req, state}
     end
