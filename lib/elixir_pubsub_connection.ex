@@ -23,6 +23,7 @@ defmodule ElixirPubsubConnection do
    end
 
    def handle_cast({:process_message, message}, %{:timer => timer, :transport_state => ts} = state) do
+        IO.puts "Got The Cast #{inspect(message)}"
         timer2 = case ts do
                     :permanent -> :undefined
                     _ -> reset_timer(timer)
