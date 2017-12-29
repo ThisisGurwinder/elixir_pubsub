@@ -27,7 +27,7 @@ defmodule ElixirPubsubConnection do
                     :permanent -> :undefined
                     _ -> reset_timer(timer)
                 end
-        state_new = case JSEX decode(message) do
+        state_new = case JSEX.decode message do
                         {:ok, parsed_message} -> send self(), {:just_send, "MESSAGE PARSED" }
                         {:error, :badarg} -> send self(), {:just_send, "BAD ARGUMENT" }
                 end
