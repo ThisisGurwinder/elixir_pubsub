@@ -2,7 +2,7 @@ defmodule ElixirPubsubConnection.Supervisor do
     defstruct parent: nil
     def start() do
         pid = spawn(fn -> init(self()) end)
-        Process.register(pid, __MODULE__)
+        :erlang.register(__MODULE__, pid)
         {:ok, pid}
     end 
 
