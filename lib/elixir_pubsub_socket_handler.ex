@@ -5,18 +5,14 @@ defmodule ElixirPubsubSocketHandler do
         IO.puts "About to initialize Socket"
         {:ok, cpid} = init_long_lived()
         :erlang.start_timer(1000, self, [])
-        connection = %{ :connection => cpid }
-        {:cowboy_websocket, req, [connection]}
+        _connection = %{ :connection => cpid }
+        {:cowboy_websocket, req, state}
     end
 
-    def terminate(_reason, _req, _state)  do 
-        :ok
-    end
-
-    def websocket_handle({:text, _content}, req, [%{:connection => nil}] = state) do
+    def websocket_handle({:text, _content}, req, state) do
         {:reply, {:text, "NIL"}, req, state}
     end
-    def websocket_handle({:text, data}, req, [%{:connection => cpid}] = state) do
+    def websocket_handle({:text, data}, req, state) do
         GenServer.cast(cpid, {:process_message, data})
         {:reply, {:text, "Processes"}, req, state}
     end
@@ -29,6 +25,10 @@ defmodule ElixirPubsubSocketHandler do
     end
     def websocket_info(_info, _req, state)  do
         {:ok, state}
+    end
+
+    def terminate(_reason, _req, _state)  do 
+        :ok
     end
 
     def create_connection(:permanent) do
