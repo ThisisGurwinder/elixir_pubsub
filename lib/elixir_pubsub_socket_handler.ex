@@ -12,13 +12,17 @@ defmodule ElixirPubsubSocketHandler do
         :ok
     end
 
-    def websocket_handle({:text, content}, req, state) do
+    def websocket_handle({:text, content}, req, %{:connection => cpid} = state) do
+        GenServer.cast(cpid, {:process_message, content})
         {:reply, {:text, "ping"}, req, state}
     end
     def websocket_handle(_frame, _req, state) do
         {:ok, state}
     end
     
+    def websocket_handle({:text, message}, req, state) do
+        {:reply, {:text, inspect(message)}, req, state}
+    end
     def websocket_info({_timeout, _ref, _msg}, req, state) do
         time = time_as_string()
         { :ok, message } = JSEX.encode(%{ time: time})
