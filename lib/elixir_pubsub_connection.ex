@@ -32,19 +32,20 @@ defmodule ElixirPubsubConnection do
                         {:ok, parsed_message} -> send self(), {:just_send, "MESSAGE PARSED" }
                         {:error, :badarg} -> send self(), {:just_send, "BAD ARGUMENT" }
                 end
-        {:noreply, %{:timer => timer2}}
+        {:noreply, Map.merge(state, %{:timer => timer2})}
     end
     def handle_cast(_message, _state) do
         send self(), "UNKNOWN CAST"
         {:noreply, _state}
     end
 
-    def handle_info({:just_send, _message}, %{:transport => transport, :buffer => buffer, :transport_state => tstate} = state) do
-        new_buffer = send_transport(transport, {:message, _message}, buffer, tstate)
-        {:noreply, %{:buffer => new_buffer}}
+    def handle_info({:just_send, message}, state) do
+        #  %{:transport => transport, :buffer => buffer, :transport_state => tstate}
+        # new_buffer = send_transport(transport, {:message, message}, buffer, tstate)
+        IO.puts "Just send #{inspect(message)}"
+        {:noreply, Map.merge(state, %{:buffer => new_buffer})}
     end
     def handle_info(info, state) do
-
         {:stop, {:unhandled_message, info}, state}
     end
 
