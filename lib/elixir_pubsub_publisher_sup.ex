@@ -2,13 +2,14 @@ defmodule ElixirPubsubPublisher.Supervisor do
     use Supervisor
 
     def start_link do
-        IO.puts "Started Start_lInk"
-        Supervisor.start_link(__MODULE__, [], name: :elixir_pubsub_publisher_supervisor)
+        Supervisor.start_link(__MODULE__, :ok, name: __MODULE__)
     end
-    def start_child(args) do
-        Supervisor.start_child(:elixir_pubsub_publisher_supervisor, [args])
+
+    def start_worker(args) do
+        Supervisor.start_child(__MODULE__, [args])
     end
-    def init(_) do
+
+    def init(:ok) do
         children = [
             worker(ElixirPubsubPublisher, [])
         ]
