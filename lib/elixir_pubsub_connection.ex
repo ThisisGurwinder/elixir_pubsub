@@ -19,7 +19,7 @@ defmodule ElixirPubsubConnection do
             :user_data => [],
             :transport_state => :permanent,
             :buffer => [],
-            :timer => :erlang.start_timer(1000000, self(), :trigger)
+            :timer => :erlang.start_timer(1000000000, self(), :trigger)
         }}
    end
 
@@ -71,19 +71,18 @@ defmodule ElixirPubsubConnection do
             :user_id => user_id,
             :user_data => user_data
         })
-        _gnew_pubs = case :dict.find(channel, publishers) do
+        new_pubs = case :dict.find(channel, publishers) do
                             {:ok, publisher_pid} ->
                                 IO.puts "Publisher ID Got #{publisher_pid}"
-        #                         publish(publisher_pid, complete_message)
-        #                         publishers
+                                publish(publisher_pid, complete_message)
+                                publishers
                             :error ->
                                 IO.puts "Got error in :dict.find" 
                                 {:ok, publisher_pid} = ElixirPubsubPublisher.Supervisor.start_child([channel, user_id, self()])
                                 publish(publisher_pid, complete_message)
                                 :dict.store(channel, publisher_pid, publishers)
                     end
-        # Map.merge(state, %{:publishers => new_pubs})
-        state
+        Map.merge(state, %{:publishers => new_pubs})
     end
     def process_message(_message, state) do
         send self(), {:just_send, "Unknown message received"}

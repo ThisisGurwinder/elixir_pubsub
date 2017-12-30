@@ -68,6 +68,6 @@ defmodule ElixirPubsubSubscriber do
         end
     end
     def subscribe_in_router(channel, user_id) do
-        :ok = GenServer.cast(:ridhm_pubsub_router, {:subscribe, channel, :from, self(), :user_id, user_id})
+        :ok = GenServer.cast(:ElixirPubsubRouter, {:subscribe, channel, :from, self(), :user_id, user_id})
     end
 end
