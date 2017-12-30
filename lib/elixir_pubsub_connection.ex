@@ -28,7 +28,7 @@ defmodule ElixirPubsubConnection do
                     _ -> reset_timer(timer)
             end
         _state_new = case Poison.decode message do
-                        {:ok, parsed_message} -> process_message(:lists.keysort(1, message), state)
+                        {:ok, parsed_message} -> process_message(:lists.keysort(1, parsed_message), state)
                         {:error, :badarg} -> send self(), {:just_send, "BAD ARGUMENT" }
                 end
         {:noreply, Map.merge(state, %{:timer => timer2})}
