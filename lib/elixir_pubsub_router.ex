@@ -87,6 +87,14 @@ defmodule ElixirPubsubRouter do
         :true
     end
 
+    def broadcast_cluster(message, [node | nodes]) do
+       GenServer.cast({:RidhmPubsubRouter, node}, msg)
+       broadcast_cluster(message, nodes)  
+    end
+    def broadcast_cluster(_, [])
+        :true
+    end
+
     def broker_publish(message, channel) do
         IO.puts "Broker about to publish #{msg} for channel #{channel}"
         case ElixirPubsubBroker.Supervisor.get_broker() do
