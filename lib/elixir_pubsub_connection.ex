@@ -71,11 +71,27 @@ defmodule ElixirPubsubConnection do
         })
         new_pubs = case :dict.find(channel, publishers) do
                             {:ok, publisher_pid} ->
-                                
+                                publish(publisher_pid, complete_message)
+                                publishers
+                            :error ->
+                                {:ok, publisher_pid} = ElixirPubsubPublisher.Supervisor.start_child([channel, user_id, self()])
+                                publish(publisher_pid, complete_message)
+                                :dict.store(channel, publisher_pid, publishers)
+                    end
+        Map.merge(state, %{:publishers => new_pubs})
     end
     def process_message(_message, state) do
         send self(), {:just_send, "Unknown message received"}
         state
+    end
+
+    def publish(publisher_pid, complete_message) do
+        case ElixirPubsubPublisher.publish(publisher_pid, complete_message) do
+            :ok -> 
+                self() ! {:just_send, "Publish this message #{inspect(complete_message)}" }
+                :ok
+            {:error, error} -> self() ! {:just_send, error}
+        end
     end
 
     def reset_timer(timer) do

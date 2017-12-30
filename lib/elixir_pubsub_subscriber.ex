@@ -61,7 +61,7 @@ defmodule ElixirPubsubSubscriber do
         end
     end
     def can_subscribe(user_id, channel) do
-        case Application.get_env(:ridhm_pubsub, :subscribe_authorization) do
+        case Application.get_env(:elixir_pubsub, :subscribe_authorization) do
             :undefined -> :true
             msg -> :true
             # {:ok, auth_config} -> ElixirPubsub.check_authorization(userid, channel, auth_config)
