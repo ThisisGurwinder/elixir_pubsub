@@ -88,9 +88,9 @@ defmodule ElixirPubsubConnection do
     def publish(publisher_pid, complete_message) do
         case ElixirPubsubPublisher.publish(publisher_pid, complete_message) do
             :ok -> 
-                self() ! {:just_send, "Publish this message #{inspect(complete_message)}" }
+                send self(), {:just_send, "Publish this message #{inspect(complete_message)}" }
                 :ok
-            {:error, error} -> self() ! {:just_send, error}
+            {:error, error} -> send self(), {:just_send, error}
         end
     end
 
