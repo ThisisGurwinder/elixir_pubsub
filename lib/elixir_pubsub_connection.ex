@@ -39,7 +39,6 @@ defmodule ElixirPubsubConnection do
     end
 
     def handle_info({:just_send, message}, %{:transport => transport, :buffer => buffer, :transport_state => tstate} = state) do
-        IO.puts "Got the #{inspect(message)}"
         new_buffer = send_transport(transport, {:message, message}, buffer, tstate)
         {:noreply, Map.merge(state, %{:buffer => new_buffer})}
     end
@@ -62,10 +61,17 @@ defmodule ElixirPubsubConnection do
                 end
         Map.merge(state, %{:subscribers => new_subs})
     end
-    def process_message(%{"channel" => channel, "publish" => publish}, state) do
-        IO.puts "Got publish message #{inspect(publish)} from channel #{inspect(channel)}"
-        send self(), {:just_send, "Got the message succesfully for channel and publish"}
-        state
+    def process_message(%{"channel" => channel, "publish" => message}, %{:publishers => publishers, :user_id => user_id, :user_data => user_data }) do
+        complete_message = Poison.encode(%{
+            :type => "message",
+            :message => message,
+            :channel => channel,
+            :user_id => user_id,
+            :user_data => user_data
+        })
+        new_pubs = case :dict.find(channel, publishers) do
+                            {:ok, publisher_pid} ->
+                                
     end
     def process_message(_message, state) do
         send self(), {:just_send, "Unknown message received"}

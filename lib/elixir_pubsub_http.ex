@@ -17,7 +17,6 @@ defmodule ElixirPubsubHttp do
             { :_,
                 [
                     {"/", ElixirPubsubHttpDefault, []},
-                    {"/stream", ElixirPubsubSocket, []},
                     {"/ws", ElixirPubsubSocketHandler, []}
                 ]}
         ])
