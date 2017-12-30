@@ -78,7 +78,7 @@ defmodule ElixirPubsubConnection do
         #                         publishers
                             :error ->
                                 IO.puts "Got error in :dict.find"
-                                {:ok, publisher_pid} = ElixirPubsubPublisherSupervisor.start_bucket([channel, user_id, self()])
+                                # {:ok, publisher_pid} = ElixirPubsubPublisherSupervisor.start_bucket([channel, user_id, self()])
         #                         publish(publisher_pid, complete_message)
         #                         :dict.store(channel, publisher_pid, publishers)
                     end
