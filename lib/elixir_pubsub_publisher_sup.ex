@@ -2,6 +2,7 @@ defmodule ElixirPubsubPublisher.Supervisor do
     use Supervisor
 
     def start_link do
+        IO.puts "Started Start_lInk"
         Supervisor.start_link(__MODULE__, [], name: :elixir_pubsub_publisher_supervisor)
     end
     def start_child(args) do
