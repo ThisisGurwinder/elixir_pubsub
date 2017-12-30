@@ -7,14 +7,14 @@ defmodule ElixirPubsubPublisher.Supervisor do
     def start_child(args) do
         Supervisor.start_child(__MODULE__, args)
     end
-    def init(_) do
+    def init(opts) do
         {:ok, {{:simple_one_for_one, 10, 10}, [
-            {:elixir_pubsub_publisher,
-                {:elixir_pubsub_publisher, :start_link, []},
+            {:ElixirPubsubPublisher,
+                {:ElixirPubsubPublisher, :start_link, []},
                 :temporary,
                 :infinity,
                 :worker,
-                [:elixir_pubsub_publisher]
+                [:ElixirPubsubPublisher]
                 } ]}}
     end
 end
