@@ -65,7 +65,7 @@ defmodule ElixirPubsubConnection do
 
     # %{:publishers => publishers, :user_id => user_id, :user_data => user_data } = 
     def process_message(%{"channel" => channel, "publish" => message}, state) do
-        IO.puts "CHannel #{inspect(channel)} Publish #{inspect(message)}"
+        IO.puts "CHannel #{inspect(channel)} Publish #{inspect(message)} and state #{inspect(state)}"
         # complete_message = Poison.encode(%{
         #     :type => "message",
         #     :message => message,
