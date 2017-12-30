@@ -28,10 +28,10 @@ defmodule ElixirPubsubConnection do
                     _ -> reset_timer(timer)
             end
         _state_new = case Poison.decode message do
-                        {:ok, parsed_message} -> process_message(:lists.keysort(1, parsed_message), state)
+                        {:ok, parsed_message} -> process_message(:lists.keysort(1, message), state)
                         {:error, :badarg} -> send self(), {:just_send, "BAD ARGUMENT" }
                 end
-        {:noreply, Map.merge(state, %{:timer => timer2})}
+        {:noreply, state}
     end
     def handle_cast(_message, state) do
         send self(), "UNKNOWN CAST"
@@ -39,6 +39,7 @@ defmodule ElixirPubsubConnection do
     end
 
     def handle_info({:just_send, message}, %{:transport => transport, :buffer => buffer, :transport_state => tstate} = state) do
+        IO.puts "Got the #{inspect(message)}"
         new_buffer = send_transport(transport, {:message, message}, buffer, tstate)
         {:noreply, Map.merge(state, %{:buffer => new_buffer})}
     end
