@@ -16,6 +16,7 @@ defmodule ElixirPubsubConnection do
             :subscribers => :dict.new(),
             :transport => from,
             :user_id => :anonymous,
+            :user_data => [],
             :transport_state => :permanent,
             :buffer => [],
             :timer => :erlang.start_timer(1000000, self(), :trigger)
