@@ -1,7 +1,7 @@
 defmodule ElixirPubsubPublisher.Supervisor do
     use Supervisor
 
-    def start_link(_) do
+    def start_link() do
         {:ok, sup} = Supervisor.start_link(__MODULE__, [], name: :ElixirPubsubPublisherSupervisor)
     end
     def start_child(args) do
