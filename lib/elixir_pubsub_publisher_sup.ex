@@ -2,7 +2,7 @@ defmodule ElixirPubsubPublisher.Supervisor do
   use Application
   import Supervisor.Spec, warn: false
 
-  def start(_type, _args) do
+  def start() do
 
     children = [
       worker(ElixirPubsubPublisher, [])
