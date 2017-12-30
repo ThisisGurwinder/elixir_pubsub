@@ -1,19 +1,19 @@
-defmodule ElixirPubsubPublisher.Supervisor do
-    use Supervisor
+defmodule ElixirPubsubPublisherSupervisor do
+  use Supervisor
 
-    def start_link do
-        Supervisor.start_link(__MODULE__, :ok, name: __MODULE__)
-    end
+  # A simple module attribute that stores the supervisor name
+  @name ElixirPubsubPublisherSupervisor
 
-    def start_worker(args) do
-        Supervisor.start_child(__MODULE__, [args])
-    end
+  def start_link(_opts) do
+    IO.puts "WQErwerwerwerWER"
+    Supervisor.start_link(__MODULE__, :ok, name: @name)
+  end
 
-    def init(:ok) do
-        children = [
-            worker(ElixirPubsubPublisher, [])
-        ]
+  def start_bucket(args) do
+    Supervisor.start_child(@name, [args])
+  end
 
-        supervise(children, strategy: :simple_one_for_one)
-    end
+  def init(:ok) do
+    Supervisor.init([ElixirPubsubPublisher], strategy: :simple_one_for_one)
+  end
 end
