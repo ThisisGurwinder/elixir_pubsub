@@ -41,6 +41,7 @@ defmodule ElixirPubsubPublisher do
                         {:reply, {:error, "error"}, state}
         #         end
         # {:reply, :ok , state}
+        end
     end
     def handle_call(:stop, _from, state) do
         {:stop, :normal, :ok, state}
