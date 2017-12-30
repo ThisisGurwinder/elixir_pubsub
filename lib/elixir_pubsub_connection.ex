@@ -62,24 +62,28 @@ defmodule ElixirPubsubConnection do
                 end
         Map.merge(state, %{:subscribers => new_subs})
     end
-    def process_message(%{"channel" => channel, "publish" => message}, %{:publishers => publishers, :user_id => user_id, :user_data => user_data } = state) do
-        complete_message = Poison.encode(%{
-            :type => "message",
-            :message => message,
-            :channel => channel,
-            :user_id => user_id,
-            :user_data => user_data
-        })
-        new_pubs = case :dict.find(channel, publishers) do
-                            {:ok, publisher_pid} ->
-                                publish(publisher_pid, complete_message)
-                                publishers
-                            :error ->
-                                {:ok, publisher_pid} = ElixirPubsubPublisher.Supervisor.start_child([channel, user_id, self()])
-                                publish(publisher_pid, complete_message)
-                                :dict.store(channel, publisher_pid, publishers)
-                    end
-        Map.merge(state, %{:publishers => new_pubs})
+
+    # %{:publishers => publishers, :user_id => user_id, :user_data => user_data } = 
+    def process_message(%{"channel" => channel, "publish" => message}, state) do
+        IO.puts "CHannel #{inspect(channel)} Publish #{inspect(message)}"
+        # complete_message = Poison.encode(%{
+        #     :type => "message",
+        #     :message => message,
+        #     :channel => channel,
+        #     :user_id => user_id,
+        #     :user_data => user_data
+        # })
+        # new_pubs = case :dict.find(channel, publishers) do
+        #                     {:ok, publisher_pid} ->
+        #                         publish(publisher_pid, complete_message)
+        #                         publishers
+        #                     :error ->
+        #                         {:ok, publisher_pid} = ElixirPubsubPublisher.Supervisor.start_child([channel, user_id, self()])
+        #                         publish(publisher_pid, complete_message)
+        #                         :dict.store(channel, publisher_pid, publishers)
+        #             end
+        # Map.merge(state, %{:publishers => new_pubs})
+        state
     end
     def process_message(_message, state) do
         send self(), {:just_send, "Unknown message received"}
