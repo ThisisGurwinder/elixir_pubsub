@@ -30,7 +30,6 @@ defmodule ElixirPubsubConnection do
             end
         _state_new = case Poison.decode(message) do
                         {:ok, parsed_message} ->
-                            IO.puts parsed_message
                             process_message(parsed_message, state)
                         {:error, :badarg} -> send self(), {:just_send, "BAD ARGUMENT" }
                 end
@@ -63,7 +62,7 @@ defmodule ElixirPubsubConnection do
                         end
                 end
         Map.merge(state, %{:subscribers => new_subs})
-    end 
+    end
     def process_message(%{"channel" => channel, "publish" => message}, state) do
         IO.puts "Got the message #{inspect(channel)} and message #{inspect(message)}"
     end
@@ -89,7 +88,8 @@ defmodule ElixirPubsubConnection do
                     end
         Map.merge(state, %{:publishers => new_pubs})
     end
-    def process_message(_message, state) do
+    def process_message(message, state) do
+        IO.inspect message
         send self(), {:just_send, "Unknown message received"}
         state
     end
