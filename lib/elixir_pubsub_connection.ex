@@ -63,7 +63,7 @@ defmodule ElixirPubsubConnection do
                 end
         Map.merge(state, %{:subscribers => new_subs})
     end
-    def process_message({:channel: channel, :publish: message}, state) do
+    def process_message({"channel" => channel, "publish" => message}, state) do
         IO.puts "Got the message #{inspect(channel)} and message #{inspect(message)}"
     end
     def process_message({%{"channel" => channel, "publish" => message}}, %{:publishers => publishers, :user_id => user_id, :user_data => user_data } = state) do
