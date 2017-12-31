@@ -70,8 +70,9 @@ defmodule ElixirPubsubPublisher do
     end
 
     def can_publish(user_id, channel) do
-        case Application.get_env(:ridhm_pubsub, :publish_authorization) do
+        case Application.get_env(:elixir_pubsub, :publish_authorization) do
             :undefined -> :true
+            :nil -> :true
             {:ok, auth_config} ->
                 ElixirPubsubAuthorization.check_authorization(user_id, channel, auth_config)
         end
