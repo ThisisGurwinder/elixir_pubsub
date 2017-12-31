@@ -12,7 +12,7 @@ defmodule ElixirPubsubRouter do
 
     def init([]) do
         :ets.new(:router_subscribers, [:bag, :private, :named_table])
-        {:ok, :done}
+        {:ok, []}
     end
 
     def find(name) do
