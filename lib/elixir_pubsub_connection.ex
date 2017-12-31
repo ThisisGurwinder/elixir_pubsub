@@ -28,11 +28,12 @@ defmodule ElixirPubsubConnection do
                     :permanent -> :undefined
                     _ -> reset_timer(timer)
             end
-        _state_new = case Poison.Parser.parse!(message) do
-                        {:ok, parsed_message} ->
-                            process_message(parsed_message, state)
-                        {:error, :badarg} -> send self(), {:just_send, "BAD ARGUMENT" }
-                end
+        try do
+            parsed_message = Poison.Parser.parse!(message)
+            process_message(parsed_message, state)
+        rescue
+            send self(), {:just_send, "BAD ARGUMENT" }
+        end
         {:noreply, state}
     end
     def handle_cast(_message, state) do
