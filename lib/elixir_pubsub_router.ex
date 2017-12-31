@@ -37,7 +37,7 @@ defmodule ElixirPubsubRouter do
     def handle_cast({:publish, message, :channel, channel}, state) do
         subs = find_element(channel)
         broadcast({:received_message, message, :channel, channel}, subs)
-        broadcast_cluster({:cluster_publish, message, :channel, channel}, nodes())
+        broadcast_cluster({:cluster_publish, message, :channel, channel}, node())
         # broker_publish(message, channel)
         IO.puts "Message :: #{inspect(message)} and channel #{inspect(channel)}"
         {:noreply, state}
