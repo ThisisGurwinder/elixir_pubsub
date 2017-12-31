@@ -109,8 +109,7 @@ defmodule ElixirPubsubRouter do
         :true
     end
 
-    def broker_publish(message, channel) do
-        IO.puts "Broker about to publish #{msg} for channel #{channel}"
+    def broker_publish(message, channel) 
         case ElixirPubsubBroker.Supervisor.get_broker() do
             :undefined ->
                 IO.puts "Undefined Broker"
