@@ -30,7 +30,7 @@ defmodule ElixirPubsubConnection do
             end
         _state_new = case JSEX.decode(message) do
                         {:ok, parsed_message} ->
-                            IO.puts "Parsed Message #{inspect(parsed_message)}"
+                            IO.puts "Parsed Message #{inspect(parsed_message)} and #{inspect(JSEX.decode(message))}"
                             process_message(parsed_message, state)
                         {:error, :badarg} -> send self(), {:just_send, "BAD ARGUMENT" }
                 end
