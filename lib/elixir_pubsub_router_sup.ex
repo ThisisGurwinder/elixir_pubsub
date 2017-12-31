@@ -15,4 +15,4 @@ defmodule ElixirPubsubRouter.Supervisor do
   def start_child(args) do
     Supervisor.start_child(ElixirPubsubRouter.Supervisor, args)
   end
-end
+end 
