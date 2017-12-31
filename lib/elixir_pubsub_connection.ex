@@ -28,7 +28,7 @@ defmodule ElixirPubsubConnection do
                     :permanent -> :undefined
                     _ -> reset_timer(timer)
             end
-        _state_new = case Poison.decode(message) do
+        _state_new = case JSEX.decode(message) do
                         {:ok, parsed_message} ->
                             process_message(parsed_message, state)
                         {:error, :badarg} -> send self(), {:just_send, "BAD ARGUMENT" }
@@ -63,8 +63,9 @@ defmodule ElixirPubsubConnection do
                 end
         Map.merge(state, %{:subscribers => new_subs})
     end
-    def process_message(%{"channel" => channel, "publish" => message}, state) do
+    def process_message([{"channel", channel}, {"publish" => message}], state) do
         IO.puts "Got the message #{inspect(channel)} and message #{inspect(message)}"
+        state
     end
     def process_message({%{"channel" => channel, "publish" => message}}, %{:publishers => publishers, :user_id => user_id, :user_data => user_data } = state) do
         IO.puts "CHannel #{inspect(channel)} Publish #{inspect(message)} and state #{inspect(state)}"
@@ -89,7 +90,6 @@ defmodule ElixirPubsubConnection do
         Map.merge(state, %{:publishers => new_pubs})
     end
     def process_message(message, state) do
-
         send self(), {:just_send, message}
         state
     end
