@@ -15,13 +15,27 @@ defmodule ElixirPubsubRouter do
         {:ok, :done}
     end
 
+    def find(name) do
+        case :ets.lookup(:router_subscribers, name) do
+            [{^name, items}] -> {:ok, items}
+            [] -> :error
+        end
+    end
+
+    def find_element(name) do
+        case :ets.lookup_element(:router_subscribers, channel) do
+            [{^name, items}] -> {:ok, items}
+            [] -> :error
+        end
+    end
+
     def handle_call({:local_presence, channel}, _from, state) do
-        users_with_dupes = try do :ets.lookup(:router_subscribers, channel, 3) rescue [] end
+        users_with_dupes = find(channel)
         {:reply, users_with_dupes, state}
     end
     
     def handle_cast({:publish, message, :channel, channel}, state) do
-        subs = try do :ets.lookup_element(:router_subscribers, channel, 2) rescue [] end
+        subs = find_element(channel)
         broadcast({:received_message, message, :channel, channel}, subs)
         broadcast_cluster({:cluster_publish, message, :channel, channel}, nodes())
         # broker_publish(message, channel)
@@ -29,7 +43,7 @@ defmodule ElixirPubsubRouter do
         {:noreply, state}
     end
     def handle_cast({:cluster_publish, message, :channel, channel}, state) do
-        subs = try do :ets.lookup_element(:router_subscribers, channel, 2) rescue [] end
+        subs = find_element(channel)
         broadcast({:received_message, message, :channel, channel}, subs)
         IO.puts "Cluster received message #{inspect(message)} and channel #{inspect(channel)}"
         {:noreply, state}
