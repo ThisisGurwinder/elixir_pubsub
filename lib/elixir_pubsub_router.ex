@@ -78,6 +78,7 @@ defmodule ElixirPubsubRouter do
     end    
 
     def publish(message, channel) do
+        IO.puts "Going to pass on Message in Router"
         GenServer.cast(__MODULE__, {:publish, message, :channel, channel})
     end
 
