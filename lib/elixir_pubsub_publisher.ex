@@ -26,8 +26,9 @@ defmodule ElixirPubsubPublisher do
     def handle_info(:shutdown, state) do
         {:stop, :shutdown, state}
     end
-
+ 
     def handle_call({:publish, message}, _from, %{:channel => channel, :user_id => user_id, :already_authorized => already_authorized} = state) do
+        IO.puts "Publisher :: #{inspect(message)}"
         case already_authorized do
             :true ->
                 GenServer.cast(ElixirPubsubRouter, {:publish, message, :channel, channel})
@@ -63,6 +64,7 @@ defmodule ElixirPubsubPublisher do
     end
 
     def publish(publisher_pid, message) do
+        IO.puts "Inside Publisher publisher()"
         GenServer.call(publisher_pid, {:publish, message})
     end
 

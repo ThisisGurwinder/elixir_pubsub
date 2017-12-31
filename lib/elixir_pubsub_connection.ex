@@ -81,6 +81,7 @@ defmodule ElixirPubsubConnection do
                             :error ->
                                 IO.puts "Got error in :dict.find" 
                                 {:ok, publisher_pid} = ElixirPubsubPublisher.Supervisor.start_child([channel, user_id, self()])
+                                GenServer.call(publisher_pid, {:publish, "Message"})
                                 publish(publisher_pid, complete_message)
                                 :dict.store(channel, publisher_pid, publishers)
                     end
