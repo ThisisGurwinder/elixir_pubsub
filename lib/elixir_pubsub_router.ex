@@ -23,7 +23,7 @@ defmodule ElixirPubsubRouter do
     end
 
     def find_element(name) do
-        case :ets.lookup_element(:router_subscribers, channel) do
+        case :ets.lookup_element(:router_subscribers, name) do
             [{^name, items}] -> {:ok, items}
             [] -> :error
         end
