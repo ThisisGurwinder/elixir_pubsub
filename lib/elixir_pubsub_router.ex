@@ -3,7 +3,7 @@ defmodule ElixirPubsubRouter do
 
     def start_link do
         opts = []
-        GenServer.start_link({:local, __MODULE__}, __MODULE__, [], opts)     
+        GenServer.start_link( __MODULE__, [], opts)     
     end
     def start do
         opts = []

@@ -5,7 +5,7 @@ defmodule ElixirPubsubHttp do
         _connection_sup_pid = spawn(fn -> ElixirPubsubConnection.Supervisor.start() end)
         ElixirPubsubPublisher.Supervisor.start()
         ElixirPubsubSubscriber.Supervisor.start()
-        ElixirPubsubRouter.start()
+        ElixirPubsubRouter.start_link()
         IO.puts "About to start http handler"
         { :ok, _ } = :cowboy.start_http(:http,
                         100,
