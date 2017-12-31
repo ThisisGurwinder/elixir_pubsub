@@ -65,7 +65,6 @@ defmodule ElixirPubsubConnection do
         Map.merge(state, %{:subscribers => new_subs})
     end
     def process_message(%{"channel" => channel, "publish" => message}, %{:publishers => publishers, :user_id => user_id, :user_data => user_data } = state) do
-        IO.puts "CHannel #{inspect(channel)} Publish #{inspect(message)} and state #{inspect(state)}"
         {:ok, complete_message } = Poison.encode(%{
             :type => "message",
             :message => message,
@@ -75,11 +74,9 @@ defmodule ElixirPubsubConnection do
         })
         new_pubs = case :dict.find(channel, publishers) do
                             {:ok, publisher_pid} ->
-                                IO.puts "Publisher ID Got #{publisher_pid}"
                                 publish(publisher_pid, complete_message)
                                 publishers
                             :error ->
-                                IO.puts "Got error in :dict.find" 
                                 {:ok, publisher_pid} = ElixirPubsubPublisher.Supervisor.start_child([channel, user_id, self()])
                                 publish(publisher_pid, complete_message)
                                 :dict.store(channel, publisher_pid, publishers)
