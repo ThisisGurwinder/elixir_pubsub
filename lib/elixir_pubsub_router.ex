@@ -35,6 +35,7 @@ defmodule ElixirPubsubRouter do
     end
     
     def handle_cast({:publish, message, :channel, channel}, state) do
+        IO.puts "Publish #{inspect(message)} Channel #{inspect(channel)}"
         subs = find_element(channel)
         broadcast({:received_message, message, :channel, channel}, subs)
         broadcast_cluster({:cluster_publish, message, :channel, channel}, node())
