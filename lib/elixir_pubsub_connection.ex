@@ -89,7 +89,8 @@ defmodule ElixirPubsubConnection do
         Map.merge(state, %{:publishers => new_pubs})
     end
     def process_message(message, state) do
-        send self(), {:just_send, "Unknown message received"}
+
+        send self(), {:just_send, message}
         state
     end
 
