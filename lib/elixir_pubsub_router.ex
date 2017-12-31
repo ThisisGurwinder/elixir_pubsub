@@ -30,7 +30,7 @@ defmodule ElixirPubsubRouter do
     end
 
     def handle_call({:local_presence, channel}, _from, state) do
-        users_with_dupes = find_element(channel, 3)
+        users_with_dupes = find(channel)
         {:reply, users_with_dupes, state}
     end
     def handle_call(:stop, _from, state) do
@@ -39,7 +39,7 @@ defmodule ElixirPubsubRouter do
     
     def handle_cast({:publish, message, :channel, channel}, state) do
         IO.puts "Publish #{inspect(message)} Channel #{inspect(channel)}"
-        subs = find_element(channel, 2)
+        subs = find(channel)
         broadcast({:received_message, message, :channel, channel}, subs)
         broadcast_cluster({:cluster_publish, message, :channel, channel}, node())
         # broker_publish(message, channel)
@@ -47,7 +47,7 @@ defmodule ElixirPubsubRouter do
         {:noreply, state}
     end
     def handle_cast({:cluster_publish, message, :channel, channel}, state) do
-        subs = find_element(channel, 2)
+        subs = find(channel)
         broadcast({:received_message, message, :channel, channel}, subs)
         IO.puts "Cluster received message #{inspect(message)} and channel #{inspect(channel)}"
         {:noreply, state}
