@@ -32,7 +32,7 @@ defmodule ElixirPubsubConnection do
             parsed_message = Poison.Parser.parse!(message)
             process_message(parsed_message, state)
         rescue
-            send self(), {:just_send, "BAD ARGUMENT" }
+            error -> send self(), {:just_send, "BAD ARGUMENT #{inspect(error)}" }
         end
         {:noreply, state}
     end
