@@ -29,24 +29,8 @@ defmodule ElixirPubsubRouter do
         end
     end
 
-    def broadcast(message, [pid | pids]) do
-        send pid, message
-        broadcast(message, pids)
-    end
-    def broadcast(_, []) do
-        :true
-    end
-
-    def broadcast_cluster(message, [node | nodes]) do
-       GenServer.cast({:RidhmPubsubRouter, node}, message)
-       broadcast_cluster(message, nodes)  
-    end
-    def broadcast_cluster(_, []) do
-        :true
-    end
-
     def handle_call({:local_presence, channel}, _from, state) do
-        users_with_dupes = find(channel)
+        users_with_dupes = find_element(channel.to_atom(), 3)
         {:reply, users_with_dupes, state}
     end
     def handle_call(:stop, _from, state) do
@@ -55,7 +39,7 @@ defmodule ElixirPubsubRouter do
     
     def handle_cast({:publish, message, :channel, channel}, state) do
         IO.puts "Publish #{inspect(message)} Channel #{inspect(channel)}"
-        subs = find(channel)
+        subs = find_element(channel.to_atom(), 2)
         broadcast({:received_message, message, :channel, channel}, subs)
         broadcast_cluster({:cluster_publish, message, :channel, channel}, node())
         # broker_publish(message, channel)
@@ -63,18 +47,18 @@ defmodule ElixirPubsubRouter do
         {:noreply, state}
     end
     def handle_cast({:cluster_publish, message, :channel, channel}, state) do
-        subs = find(channel)
+        subs = find_element(channel.to_atom(), 2)
         broadcast({:received_message, message, :channel, channel}, subs)
         IO.puts "Cluster received message #{inspect(message)} and channel #{inspect(channel)}"
         {:noreply, state}
     end
     def handle_cast({:subscribe, channel, :from, reply_to, :user_id, user_id}, state) do
-        :ets.insert(:router_subscribers, {channel, reply_to, user_id})
+        :ets.insert(:router_subscribers, {channel.to_atom(), reply_to, user_id})
         IO.puts "Subscribed Channel #{inspect(channel)}"
         {:noreply, state}
     end
     def handle_cast({:unsubscribe, channel, :from, reply_to, :user_id, user_id}, state) do
-        :ets.delete_object(:router_subscribers, {channel, reply_to, user_id})
+        :ets.delete_object(:router_subscribers, {channel.to_atom(), reply_to, user_id})
         {:noreply, state}
     end
     def handle_cast(_message, state) do
@@ -112,6 +96,22 @@ defmodule ElixirPubsubRouter do
     def unsubscribe_channels([channel | channels], from, user_id) do
         GenServer.cast(__MODULE__, {:unsubscribe, channel, :from, from, :user_id, user_id})
         unsubscribe_channels(channels, from, user_id)
+    end
+
+    def broadcast(message, [pid | pids]) do
+        send pid, message
+        broadcast(message, pids)
+    end
+    def broadcast(_, []) do
+        :true
+    end
+
+    def broadcast_cluster(message, [node | nodes]) do
+       GenServer.cast({:RidhmPubsubRouter, node}, message)
+       broadcast_cluster(message, nodes)  
+    end
+    def broadcast_cluster(_, []) do
+        :true
     end
 
     def broker_publish(message, channel) do
