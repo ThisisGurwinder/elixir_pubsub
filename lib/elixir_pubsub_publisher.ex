@@ -30,12 +30,12 @@ defmodule ElixirPubsubPublisher do
     def handle_call({:publish, message}, _from, %{:channel => channel, :user_id => user_id, :already_authorized => already_authorized} = state) do
         case already_authorized do
             :true ->
-                GenServer.cast(:ElixirPubsubRouter, {:publish, message, :channel, channel})
+                GenServer.cast(ElixirPubsubRouter, {:publish, message, :channel, channel})
                 {:reply, :ok, state}
             _ ->
                 case can_publish(user_id, channel) do
                     :true ->
-                        GenServer.cast(:ElixirPubsubRouter, {:publish, message, :channel, channel})
+                        GenServer.cast(ElixirPubsubRouter, {:publish, message, :channel, channel})
                         {:reply, :ok, Map.merge(state, %{:already_authorized => true})}
                     error ->
                         {:reply, {:error, "error"}, state}
