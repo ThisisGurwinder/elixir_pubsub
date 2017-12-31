@@ -29,7 +29,9 @@ defmodule ElixirPubsubConnection do
                     _ -> reset_timer(timer)
             end
         _state_new = case Poison.decode message do
-                        {:ok, parsed_message} -> process_message(parsed_message, state)
+                        {:ok, parsed_message} -> 
+                            IO.puts "Parsed Message #{inspect(parsed_message)}"
+                            process_message(parsed_message, state)
                         {:error, :badarg} -> send self(), {:just_send, "BAD ARGUMENT" }
                 end
         {:noreply, state}
