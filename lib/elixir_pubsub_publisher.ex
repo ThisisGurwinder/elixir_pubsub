@@ -35,6 +35,7 @@ defmodule ElixirPubsubPublisher do
             _ ->
                 case can_publish(user_id, channel) do
                     :true ->
+                        IO.puts "Going to all Router #{inspect(message)}"
                         GenServer.cast(:ElixirPubsubRouter, {:publish, message, :channel, channel})
                         {:reply, :ok, Map.merge(state, %{:already_authorized => true})}
                     error ->
