@@ -33,6 +33,9 @@ defmodule ElixirPubsubRouter do
         users_with_dupes = find(channel)
         {:reply, users_with_dupes, state}
     end
+    def handle_call(:stop, _from, state) do
+        {:stop, :normal, :ok, state}
+    end
     
     def handle_cast({:publish, message, :channel, channel}, state) do
         IO.puts "Publish #{inspect(message)} Channel #{inspect(channel)}"
