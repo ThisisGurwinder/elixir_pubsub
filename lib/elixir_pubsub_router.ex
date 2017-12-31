@@ -7,7 +7,7 @@ defmodule ElixirPubsubRouter do
     end
     def start do
         opts = []
-        GenServer.start({:local, __MODULE__}, __MODULE__, [], opts)
+        GenServer.start(__MODULE__, [], opts)
     end
 
     def init([]) do
