@@ -49,7 +49,7 @@ defmodule ElixirPubsubConnection do
         {:stop, {:unhandled_message, info}, state}
     end
 
-    def process_message([{"subscribe", channel}], %{:subscribers => subscribers, :user_id => userid} = state ) do
+    def process_message(%{"subscribe" => channel}, %{:subscribers => subscribers, :user_id => userid} = state ) do
         new_subs = case :dict.find(channel, subscribers) do
                         {:ok, _} -> subscribers;
                         error ->
