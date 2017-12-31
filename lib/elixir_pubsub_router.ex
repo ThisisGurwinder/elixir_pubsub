@@ -105,7 +105,7 @@ defmodule ElixirPubsubRouter do
        GenServer.cast({:RidhmPubsubRouter, node}, msg)
        broadcast_cluster(message, nodes)  
     end
-    def broadcast_cluster(_, [])
+    def broadcast_cluster(_, []) do
         :true
     end
 
