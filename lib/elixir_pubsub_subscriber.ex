@@ -47,7 +47,6 @@ defmodule ElixirPubsubSubscriber do
     end
 
     def subscribe(subscriber_pid) do
-
         GenServer.call(subscriber_pid, :subscribe)
     end
     def update_user(subscriber_pid, user_id) do
@@ -64,8 +63,8 @@ defmodule ElixirPubsubSubscriber do
     def can_subscribe(user_id, channel) do
         case Application.get_env(:elixir_pubsub, :subscribe_authorization) do
             :undefined -> :true
+            {:ok, auth_config} -> ElixirPubsub.check_authorization(userid, channel, auth_config)
             msg -> :true
-            # {:ok, auth_config} -> ElixirPubsub.check_authorization(userid, channel, auth_config)
         end
     end
     def subscribe_in_router(channel, user_id) do

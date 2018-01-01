@@ -87,6 +87,23 @@ defmodule ElixirPubsubConnection do
                     end
         Map.merge(state, %{:publishers => new_pubs})
     end
+    def process_message(%{"presence" => channel}, %{:subscribers => subscribers}) do
+        case Application.get_env(:elixir_pubsub, :presence) do
+            {:ok, :true} ->
+                case :dict.find(channel, subscribers) do
+                    :error -> send self(), "Cannot ask for presence when not subscribed to channel"
+                    {:ok, _} ->
+                        user_subs = ElixirPubsubPresence.presence(channel)
+                        send self(), {:presence_response,
+                            Poison.encode(%{ :type => "presence",
+                                :subscribers => user_subs,
+                                :channel => channel
+                            })}
+                end
+            _ ->
+                send self(), {:just_send, "presence is disabled"}
+        end
+    end
     def process_message(message, state) do
         send self(), {:just_send, message}
         state
