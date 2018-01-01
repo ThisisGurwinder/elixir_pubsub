@@ -22,7 +22,7 @@ defmodule ElixirPubsubPresence do
 		{users_dup, _} = :rpc.multicall(RidhmPubsubRouter, :local_presence, [channel])
 		users_sub = :sets.to_list(:sets.from_list(:lists.append(users_dup)))
 		users_sub2 = :lists.delete(:anonymous, users_sub)
-		users_sub3 = :lists.delete(server, users_sub2)
+		users_sub3 = :lists.delete(:server, users_sub2)
 		{:reply, users_sub3, state}
 	end
 
