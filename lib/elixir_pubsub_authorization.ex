@@ -30,6 +30,7 @@ defmodule ElixirPubsubAuthorization do
 							end
 						catch 
 							_ -> "malformed json from server on authentication"
+					end
 				end
 		_ -> "bad response form server on authentication"
 		end
