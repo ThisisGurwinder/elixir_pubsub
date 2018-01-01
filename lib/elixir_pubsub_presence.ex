@@ -10,7 +10,7 @@ defmodule ElixirPubsubPresence do
 		GenServer.call(pid, :stop, :infinity)
 	end
 
-	def init([]) ->
+	def init([]) do
 		{:ok, []}
 	end
 
