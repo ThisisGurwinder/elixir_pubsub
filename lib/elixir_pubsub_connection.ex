@@ -71,7 +71,7 @@ defmodule ElixirPubsubConnection do
             :channel => channel,
             :user_id => user_id,
             :user_data => user_data
-        })
+        }) 
         new_pubs = case :dict.find(channel, publishers) do
                             {:ok, publisher_pid} ->
                                 publish(publisher_pid, complete_message)

@@ -47,6 +47,7 @@ defmodule ElixirPubsubSubscriber do
     end
 
     def subscribe(subscriber_pid) do
+
         GenServer.call(subscriber_pid, :subscribe)
     end
     def update_user(subscriber_pid, user_id) do
@@ -68,6 +69,6 @@ defmodule ElixirPubsubSubscriber do
         end
     end
     def subscribe_in_router(channel, user_id) do
-        :ok = GenServer.cast(:ElixirPubsubRouter, {:subscribe, channel, :from, self(), :user_id, user_id})
+        :ok = GenServer.cast(ElixirPubsubRouter, {:subscribe, channel, :from, self(), :user_id, user_id})
     end
 end

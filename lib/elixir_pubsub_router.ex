@@ -83,6 +83,7 @@ defmodule ElixirPubsubRouter do
     end
 
     def subscribe(channel, from, user_id) do
+        IO.puts "How to subscribe "
         GenServer.cast(__MODULE__, {:subscribe, channel, :from, from, :user_id, user_id})
     end
 
