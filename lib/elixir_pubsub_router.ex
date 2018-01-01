@@ -17,15 +17,15 @@ defmodule ElixirPubsubRouter do
 
     def find(name) do
         case :ets.lookup(:router_subscribers, name) do
-            [items] -> {:ok, [items]}
             [] -> :error
+            items -> {:ok, items}
         end
     end
 
     def find_element(name, x) do
         case :ets.lookup_element(:router_subscribers, name, x) do
-            [items] -> {:ok, [items]}
             [] -> :error
+            items -> {:ok, items}
         end
     end
 
