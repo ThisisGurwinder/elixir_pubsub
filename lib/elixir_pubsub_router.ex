@@ -17,7 +17,7 @@ defmodule ElixirPubsubRouter do
 
     def find(name) do
         case :ets.lookup(:router_subscribers, name) do
-            [item] -> {:ok, items}
+            [item] -> {:ok, item}
             [] -> :error
         end
     end
