@@ -100,10 +100,11 @@ defmodule ElixirPubsubRouter do
             {:ok, subs} -> broadcast({:received_message, message, :channel, channel}, subs)
             :error -> IO.puts "Error Inside Handle Cast Elixir Pubsub Router . Handle Cast"
         end
-        broadcast_cluster({:cluster_publish, message, :channel, channel}, node())
-        # broker_publish(message, channel)
-        IO.puts "Message :: #{inspect(message)} and channel #{inspect(channel)}"
-        {:noreply, state}
+        case node() do
+            :nonode@nohost -> {:noreply, state}
+             nodes -> broadcast_cluster({:cluster_publish, message, :channel, channel}, nodes)
+                    {:noreply, state}
+        end
     end
     def handle_cast({:cluster_publish, message, :channel, channel}, state) do
         case find_element(String.to_atom(channel), 2) do
