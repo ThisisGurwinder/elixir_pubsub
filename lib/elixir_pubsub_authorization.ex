@@ -12,8 +12,8 @@ defmodule ElixirPubsubAuthorization do
 		end
 	end
 
-	def check_is_authenticated(user_id) when user_id == :anonymous -> "needs authentication"
-	def check_is_authenticated(_) -> :true
+	def check_is_authenticated(user_id) when user_id == :anonymous do "needs authentication" end
+	def check_is_authenticated(_) do :true end
 
 	def ask_authentication(user_id, channel, config) do
 		case :lists.keyfind(:authorization_url, 1, config) do
