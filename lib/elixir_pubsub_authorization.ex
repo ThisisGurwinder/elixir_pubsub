@@ -19,7 +19,7 @@ defmodule ElixirPubsubAuthorization do
 		case :lists.keyfind(:authorization_url, 1, config) do
 			:false -> "bad value for authorization_url in config"
 			{:authorization_url, authorize_url} ->
-				case :httpc.request(:post, {authorize_url, [],  "application/x-www-form-urlencoded", "userid="++:binary_to_list(user_id)++"&channel="++:binary_to_list(channel)}, [], []) do
+				case :httpc.request(:post, {authorize_url, [],  "application/x-www-form-urlencoded", "userid="++:erlang.binary_to_list(user_id)++"&channel="++:erlang.binary_to_list(channel)}, [], []) do
 					{:ok, {{_version, 200, _reason_phrase}, _headers, body}} ->
 						try do
 							case Poison.decode(:binary.list_to_bin(body)) do
