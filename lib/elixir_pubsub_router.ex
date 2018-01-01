@@ -29,53 +29,6 @@ defmodule ElixirPubsubRouter do
         end
     end
 
-    def handle_call({:local_presence, channel}, _from, state) do
-        users_with_dupes = find_element(String.to_atom(channel), 3)
-        {:reply, users_with_dupes, state}
-    end
-    def handle_call(:stop, _from, state) do
-        {:stop, :normal, :ok, state}
-    end
-    
-    def handle_cast({:publish, message, :channel, channel}, state) do
-        IO.puts "Publish #{inspect(message)} Channel #{inspect(channel)}"
-        subs = find_element(String.to_atom(channel), 2)
-        broadcast({:received_message, message, :channel, channel}, subs)
-        broadcast_cluster({:cluster_publish, message, :channel, channel}, node())
-        # broker_publish(message, channel)
-        IO.puts "Message :: #{inspect(message)} and channel #{inspect(channel)}"
-        {:noreply, state}
-    end
-    def handle_cast({:cluster_publish, message, :channel, channel}, state) do
-        subs = find_element(String.to_atom(channel), 2)
-        broadcast({:received_message, message, :channel, channel}, subs)
-        IO.puts "Cluster received message #{inspect(message)} and channel #{inspect(channel)}"
-        {:noreply, state}
-    end
-    def handle_cast({:subscribe, channel, :from, reply_to, :user_id, user_id}, state) do
-        :ets.insert(:router_subscribers, {String.to_atom(channel), reply_to, user_id})
-        IO.puts "Subscribed Channel #{inspect(channel)}"
-        {:noreply, state}
-    end
-    def handle_cast({:unsubscribe, channel, :from, reply_to, :user_id, user_id}, state) do
-        :ets.delete_object(:router_subscribers, {String.to_atom(channel), reply_to, user_id})
-        {:noreply, state}
-    end
-    def handle_cast(_message, state) do
-        {:noreply, state}
-    end
-
-    def handle_info(_info, state) do
-        {:stop, {:unhandled_message, _info}, state}
-    end
-
-    def terminate(_reason, _state) do
-        :ok
-    end
-
-    def code_change(_oldVsn, state, _extra) do
-        {:ok, state}
-    end    
 
     def publish(message, channel) do
         IO.puts "Going to pass on Message in Router"
@@ -128,5 +81,53 @@ defmodule ElixirPubsubRouter do
 
     def local_presence(channel) do
         GenServer.call(__MODULE__, {:local_presence, channel})
+    end
+    
+    def handle_call({:local_presence, channel}, _from, state) do
+        users_with_dupes = find_element(String.to_atom(channel), 3)
+        {:reply, users_with_dupes, state}
+    end
+    def handle_call(:stop, _from, state) do
+        {:stop, :normal, :ok, state}
+    end
+    
+    def handle_cast({:publish, message, :channel, channel}, state) do
+        IO.puts "Publish #{inspect(message)} Channel #{inspect(channel)}"
+        subs = find_element(String.to_atom(channel), 2)
+        broadcast({:received_message, message, :channel, channel}, subs)
+        broadcast_cluster({:cluster_publish, message, :channel, channel}, node())
+        # broker_publish(message, channel)
+        IO.puts "Message :: #{inspect(message)} and channel #{inspect(channel)}"
+        {:noreply, state}
+    end
+    def handle_cast({:cluster_publish, message, :channel, channel}, state) do
+        subs = find_element(String.to_atom(channel), 2)
+        broadcast({:received_message, message, :channel, channel}, subs)
+        IO.puts "Cluster received message #{inspect(message)} and channel #{inspect(channel)}"
+        {:noreply, state}
+    end
+    def handle_cast({:subscribe, channel, :from, reply_to, :user_id, user_id}, state) do
+        :ets.insert(:router_subscribers, {String.to_atom(channel), reply_to, user_id})
+        IO.puts "Subscribed Channel #{inspect(channel)}"
+        {:noreply, state}
+    end
+    def handle_cast({:unsubscribe, channel, :from, reply_to, :user_id, user_id}, state) do
+        :ets.delete_object(:router_subscribers, {String.to_atom(channel), reply_to, user_id})
+        {:noreply, state}
+    end
+    def handle_cast(_message, state) do
+        {:noreply, state}
+    end
+
+    def handle_info(_info, state) do
+        {:stop, {:unhandled_message, _info}, state}
+    end
+
+    def terminate(_reason, _state) do
+        :ok
+    end
+
+    def code_change(_oldVsn, state, _extra) do
+        {:ok, state}
     end
 end
