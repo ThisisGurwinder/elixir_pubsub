@@ -4,3 +4,5 @@ I know you laughing at my commit messages Boi ->
      true -> {:laugh, :syncing_with_server_to_test_with_git }
      false -> :done
    end
+
+#Syntactic_Sugar_Guru_Lol
