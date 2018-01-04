@@ -40,8 +40,8 @@ defmodule ElixirPubsubConnection.Supervisor do
                         send from, self()
                         loop(state, curConns)
                 end;
-            {'EXIT', parent, reason} ->
-                exit(reason)
+            # {'EXIT', parent, reason} ->
+            #    exit(reason)
             {'EXIT', pid, reason} ->
                 report_error(pid, reason)
                 case :ets.lookup(:elixir_pubsub_conn_bypid, pid) do
