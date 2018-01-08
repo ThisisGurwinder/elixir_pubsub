@@ -5,4 +5,3 @@ I know you laughing at my commit messages Boi ->
      false -> :done
    end
 
-#Syntactic_Sugar_Guru_Lol
